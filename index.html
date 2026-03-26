@@ -15,6 +15,7 @@
     --accent-maths: #b5451b;
     --accent-science: #2d6a4f;
     --accent-business: #7b2d8b;
+    --accent-custom: #c27803;
     --border: #e0ddd6;
     --border-light: #eceae4;
     --highlight: #fef9e7;
@@ -22,6 +23,9 @@
     --tag-maths-bg: #fbeee6;
     --tag-science-bg: #e6f2ec;
     --tag-business-bg: #f3e8f6;
+    --tag-custom-bg: #fef3d6;
+    --hidden-bg: #f2f1ed;
+    --danger: #c0392b;
   }
 
   * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -85,11 +89,49 @@
     gap: 0.4rem;
   }
 
+  /* EDIT MODE TOGGLE */
+  .toolbar {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 1.2rem 2rem 0;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+  .edit-toggle {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--text-muted);
+    cursor: pointer;
+    user-select: none;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    transition: all 0.2s;
+  }
+  .edit-toggle:hover { border-color: var(--accent-cs); color: var(--accent-cs); }
+  .edit-toggle.active {
+    background: var(--accent-cs);
+    color: white;
+    border-color: var(--accent-cs);
+  }
+  .edit-toggle svg { width: 16px; height: 16px; }
+  .toolbar-hint {
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    font-style: italic;
+  }
+
   /* MAIN */
   .main {
     max-width: 1100px;
     margin: 0 auto;
-    padding: 2rem;
+    padding: 1.5rem 2rem 2rem;
   }
 
   /* LEGEND */
@@ -120,10 +162,11 @@
   .legend-dot.maths { background: var(--accent-maths); }
   .legend-dot.science { background: var(--accent-science); }
   .legend-dot.business { background: var(--accent-business); }
+  .legend-dot.custom { background: var(--accent-custom); }
 
   /* INTRO */
   .intro {
-    margin-bottom: 2.5rem;
+    margin-bottom: 2rem;
     font-size: 0.95rem;
     color: var(--text-muted);
     max-width: 800px;
@@ -165,7 +208,6 @@
     padding: 0.3rem 0.6rem;
     border-radius: 6px;
     flex-shrink: 0;
-    letter-spacing: 0.02em;
   }
   .unit-title {
     font-family: 'DM Serif Display', serif;
@@ -189,7 +231,7 @@
     justify-content: center;
     border-radius: 50%;
     background: var(--border-light);
-    transition: transform 0.3s ease, background 0.2s;
+    transition: transform 0.3s ease;
     flex-shrink: 0;
   }
   .unit.open .unit-toggle { transform: rotate(180deg); }
@@ -202,7 +244,6 @@
     stroke-linecap: round;
     stroke-linejoin: round;
   }
-
   .unit-body {
     display: none;
     padding: 1.5rem;
@@ -211,26 +252,63 @@
 
   /* TOPIC ROW */
   .topic {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr 1fr;
+    display: flex;
+    flex-wrap: wrap;
     gap: 0;
     border: 1px solid var(--border-light);
     border-radius: 8px;
     overflow: hidden;
     margin-bottom: 1rem;
+    position: relative;
   }
   .topic:last-child { margin-bottom: 0; }
+
+  /* TOPIC CELL */
   .topic-cell {
+    flex: 1 1 0;
+    min-width: 200px;
     padding: 1rem 1.1rem;
     font-size: 0.85rem;
     line-height: 1.6;
     border-right: 1px solid var(--border-light);
+    position: relative;
+    transition: all 0.3s ease;
   }
   .topic-cell:last-child { border-right: none; }
   .topic-cell.cs { border-top: 3px solid var(--accent-cs); }
   .topic-cell.maths { border-top: 3px solid var(--accent-maths); }
   .topic-cell.science { border-top: 3px solid var(--accent-science); }
   .topic-cell.business { border-top: 3px solid var(--accent-business); }
+  .topic-cell.custom { border-top: 3px solid var(--accent-custom); }
+
+  /* HIDDEN STATE */
+  .topic-cell.hidden-cell {
+    flex: 0 0 48px;
+    min-width: 48px;
+    max-width: 48px;
+    padding: 0.6rem 0.3rem;
+    background: var(--hidden-bg);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    writing-mode: vertical-rl;
+    text-orientation: mixed;
+    overflow: hidden;
+  }
+  .topic-cell.hidden-cell .cell-content { display: none; }
+  .topic-cell.hidden-cell .hidden-label {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    opacity: 0.5;
+    white-space: nowrap;
+  }
+  .topic-cell:not(.hidden-cell) .hidden-label { display: none; }
 
   .topic-cell-label {
     font-size: 0.7rem;
@@ -246,6 +324,7 @@
   .topic-cell.maths .topic-cell-label { color: var(--accent-maths); }
   .topic-cell.science .topic-cell-label { color: var(--accent-science); }
   .topic-cell.business .topic-cell-label { color: var(--accent-business); }
+  .topic-cell.custom .topic-cell-label { color: var(--accent-custom); }
 
   .topic-cell h4 {
     font-size: 0.92rem;
@@ -270,28 +349,164 @@
   .activity-tag.maths { background: var(--tag-maths-bg); color: var(--accent-maths); }
   .activity-tag.science { background: var(--tag-science-bg); color: var(--accent-science); }
   .activity-tag.business { background: var(--tag-business-bg); color: var(--accent-business); }
+  .activity-tag.custom { background: var(--tag-custom-bg); color: var(--accent-custom); }
 
-  /* COLUMN HEADERS (inside unit) */
-  .topic-headers {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr 1fr;
-    gap: 0;
-    margin-bottom: 0.75rem;
+  /* CELL TOGGLE BUTTON (edit mode only) */
+  .cell-toggle-btn {
+    display: none;
+    position: absolute;
+    top: 6px;
+    right: 6px;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    border: none;
+    cursor: pointer;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.7rem;
+    z-index: 2;
+    transition: all 0.15s;
+    padding: 0;
+    line-height: 1;
   }
-  .topic-col-head {
-    font-size: 0.72rem;
+  body.edit-mode .cell-toggle-btn { display: flex; }
+  .topic-cell:not(.hidden-cell) .cell-toggle-btn {
+    background: rgba(0,0,0,0.06);
+    color: var(--text-muted);
+  }
+  .topic-cell:not(.hidden-cell) .cell-toggle-btn:hover {
+    background: var(--danger);
+    color: white;
+  }
+  .topic-cell.hidden-cell .cell-toggle-btn {
+    position: static;
+    margin-bottom: 0.3rem;
+    background: rgba(0,0,0,0.08);
+    color: var(--text-muted);
+    writing-mode: horizontal-tb;
+  }
+  .topic-cell.hidden-cell .cell-toggle-btn:hover {
+    background: var(--accent-science);
+    color: white;
+  }
+  /* CS column — never hide */
+  .topic-cell.cs .cell-toggle-btn { display: none !important; }
+
+  /* ADD CUSTOM TOPIC BUTTON */
+  .add-custom-btn {
+    display: none;
+    width: 100%;
+    padding: 0.6rem;
+    margin-top: 0.5rem;
+    border: 2px dashed var(--border);
+    border-radius: 8px;
+    background: transparent;
+    color: var(--text-muted);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  body.edit-mode .add-custom-btn { display: block; }
+  .add-custom-btn:hover {
+    border-color: var(--accent-custom);
+    color: var(--accent-custom);
+    background: var(--tag-custom-bg);
+  }
+
+  /* CUSTOM TOPIC MODAL */
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.4);
+    z-index: 100;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(3px);
+  }
+  .modal-overlay.active { display: flex; }
+  .modal {
+    background: var(--surface);
+    border-radius: 14px;
+    padding: 2rem;
+    width: 90%;
+    max-width: 480px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+    position: relative;
+  }
+  .modal h3 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.2rem;
+    margin-bottom: 1.2rem;
+  }
+  .modal label {
+    display: block;
+    font-size: 0.78rem;
     font-weight: 600;
     text-transform: uppercase;
-    letter-spacing: 0.08em;
-    padding: 0 0.3rem;
-    display: flex;
-    align-items: center;
-    gap: 0.35rem;
+    letter-spacing: 0.06em;
+    color: var(--text-muted);
+    margin-bottom: 0.35rem;
+    margin-top: 1rem;
   }
-  .topic-col-head.cs { color: var(--accent-cs); }
-  .topic-col-head.maths { color: var(--accent-maths); }
-  .topic-col-head.science { color: var(--accent-science); }
-  .topic-col-head.business { color: var(--accent-business); }
+  .modal label:first-of-type { margin-top: 0; }
+  .modal input, .modal textarea {
+    width: 100%;
+    padding: 0.6rem 0.8rem;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.88rem;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    outline: none;
+    transition: border-color 0.2s;
+    color: var(--text);
+  }
+  .modal input:focus, .modal textarea:focus { border-color: var(--accent-custom); }
+  .modal textarea { resize: vertical; min-height: 70px; }
+  .modal-actions {
+    display: flex;
+    gap: 0.8rem;
+    margin-top: 1.5rem;
+    justify-content: flex-end;
+  }
+  .modal-actions button {
+    padding: 0.55rem 1.2rem;
+    border-radius: 8px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    border: 1px solid var(--border);
+    transition: all 0.15s;
+  }
+  .btn-cancel { background: var(--surface); color: var(--text-muted); }
+  .btn-cancel:hover { background: var(--hidden-bg); }
+  .btn-save { background: var(--accent-custom); color: white; border-color: var(--accent-custom); }
+  .btn-save:hover { opacity: 0.9; }
+
+  /* DELETE CUSTOM CELL BTN */
+  .cell-delete-btn {
+    display: none;
+    position: absolute;
+    top: 6px;
+    right: 6px;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    border: none;
+    background: rgba(0,0,0,0.06);
+    color: var(--text-muted);
+    cursor: pointer;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.65rem;
+    z-index: 2;
+  }
+  body.edit-mode .topic-cell.custom .cell-delete-btn { display: flex; }
+  .cell-delete-btn:hover { background: var(--danger); color: white; }
 
   /* FOOTER */
   .footer {
@@ -305,15 +520,19 @@
 
   /* RESPONSIVE */
   @media (max-width: 900px) {
-    .topic {
-      grid-template-columns: 1fr;
-    }
-    .topic-cell {
-      border-right: none;
-      border-bottom: 1px solid var(--border-light);
-    }
+    .topic { flex-direction: column; }
+    .topic-cell { min-width: 100%; border-right: none; border-bottom: 1px solid var(--border-light); }
     .topic-cell:last-child { border-bottom: none; }
-    .topic-headers { display: none; }
+    .topic-cell.hidden-cell {
+      writing-mode: horizontal-tb;
+      max-width: 100%;
+      min-width: 100%;
+      flex: 1 1 auto;
+      min-height: 40px;
+      flex-direction: row;
+      padding: 0.5rem 1rem;
+    }
+    .topic-cell.hidden-cell .hidden-label { writing-mode: horizontal-tb; }
     .header h1 { font-size: 1.8rem; }
     .unit-spec { display: none; }
   }
@@ -323,7 +542,8 @@
     body { background: white; font-size: 10pt; }
     .unit { break-inside: avoid; }
     .unit-body { display: block !important; }
-    .unit-toggle { display: none; }
+    .unit-toggle, .cell-toggle-btn, .add-custom-btn, .toolbar, .cell-delete-btn { display: none !important; }
+    .topic-cell.hidden-cell { display: none !important; }
     .header { background: var(--accent-cs) !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
   }
 </style>
@@ -342,6 +562,14 @@
   </div>
 </div>
 
+<div class="toolbar">
+  <div class="edit-toggle" id="editToggle" onclick="toggleEditMode()">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+    Edit Mode
+  </div>
+  <span class="toolbar-hint" id="toolbarHint" style="display:none;">Click <strong>×</strong> on any card to hide it · Click collapsed strips to restore · Click <strong>+ Add topic</strong> for custom links</span>
+</div>
+
 <div class="main">
 
   <div class="legend">
@@ -349,10 +577,11 @@
     <div class="legend-item"><span class="legend-dot maths"></span> Maths</div>
     <div class="legend-item"><span class="legend-dot science"></span> Science (Physics)</div>
     <div class="legend-item"><span class="legend-dot business"></span> Business Studies</div>
+    <div class="legend-item"><span class="legend-dot custom"></span> Custom / Other</div>
   </div>
 
   <p class="intro">
-    This Scheme of Work identifies where <strong>GCSE Computer Science</strong> topics directly overlap with content students encounter in Maths, Science and Business. The aim is to allow departments to <strong>coordinate timing</strong> so students meet the same underlying concept — place value, logic, data handling, systems thinking — in multiple subjects within the same half-term, strengthening retention and transfer. Each unit below is expandable and contains topic-level mappings with suggested cross-curricular activities.
+    This Scheme of Work identifies where <strong>GCSE Computer Science</strong> topics directly overlap with content students encounter in Maths, Science and Business. Use <strong>Edit Mode</strong> to hide subject cards that don't apply to a particular topic row, and to add your own cross-curricular links from other subjects (e.g. English, Geography, Art).
   </p>
 
   <!-- ===================== UNIT 1 ===================== -->
@@ -365,145 +594,220 @@
     </div>
     <div class="unit-body">
 
-      <!-- Topic 1.1 -->
-      <div class="topic">
+      <div class="topic" data-topic-id="1-1">
         <div class="topic-cell cs">
-          <div class="topic-cell-label">Computer Science</div>
-          <h4>Binary &amp; Denary Conversion</h4>
-          <p>Unsigned binary integers, place values (128–1), binary ↔ denary conversion, binary addition, overflow.</p>
-          <span class="activity-tag cs">Trace binary addition</span>
+          <div class="cell-content">
+            <div class="topic-cell-label">Computer Science</div>
+            <h4>Binary &amp; Denary Conversion</h4>
+            <p>Unsigned binary integers, place values (128–1), binary ↔ denary conversion, binary addition, overflow.</p>
+            <span class="activity-tag cs">Trace binary addition</span>
+          </div>
+          <span class="hidden-label">CS</span>
         </div>
         <div class="topic-cell maths">
-          <div class="topic-cell-label">Maths</div>
-          <h4>Place Value &amp; Number Bases</h4>
-          <p>Powers of 10 place-value system; understanding that the same positional principle applies in base-2; index notation (2⁰, 2¹ … 2⁷).</p>
-          <span class="activity-tag maths">Compare base-10 vs base-2 columns</span>
+          <button class="cell-toggle-btn" onclick="toggleCell(this)" title="Hide this card">×</button>
+          <div class="cell-content">
+            <div class="topic-cell-label">Maths</div>
+            <h4>Place Value &amp; Number Bases</h4>
+            <p>Powers of 10 place-value system; same positional principle in base-2; index notation (2⁰, 2¹ … 2⁷).</p>
+            <span class="activity-tag maths">Compare base-10 vs base-2 columns</span>
+          </div>
+          <span class="hidden-label">Maths</span>
         </div>
         <div class="topic-cell science">
-          <div class="topic-cell-label">Science</div>
-          <h4>Digital Signals (Physics)</h4>
-          <p>Why digital systems use binary (high/low voltage); signal vs noise advantage of digital over analogue transmission.</p>
-          <span class="activity-tag science">Oscilloscope voltage demo</span>
+          <button class="cell-toggle-btn" onclick="toggleCell(this)" title="Hide this card">×</button>
+          <div class="cell-content">
+            <div class="topic-cell-label">Science</div>
+            <h4>Digital Signals (Physics)</h4>
+            <p>Why digital systems use binary (high/low voltage); signal vs noise advantage of digital over analogue.</p>
+            <span class="activity-tag science">Oscilloscope voltage demo</span>
+          </div>
+          <span class="hidden-label">Science</span>
         </div>
         <div class="topic-cell business">
-          <div class="topic-cell-label">Business</div>
-          <h4>Data-Driven Decisions</h4>
-          <p>How businesses store and transmit data digitally; reliability of digital records vs paper-based systems.</p>
-          <span class="activity-tag business">Case study: stock systems</span>
+          <button class="cell-toggle-btn" onclick="toggleCell(this)" title="Hide this card">×</button>
+          <div class="cell-content">
+            <div class="topic-cell-label">Business</div>
+            <h4>Data-Driven Decisions</h4>
+            <p>How businesses store and transmit data digitally; reliability of digital records vs paper-based systems.</p>
+            <span class="activity-tag business">Case study: stock systems</span>
+          </div>
+          <span class="hidden-label">Business</span>
         </div>
       </div>
+      <button class="add-custom-btn" onclick="openCustomModal('1-1')">+ Add cross-curricular topic</button>
 
-      <!-- Topic 1.2 -->
-      <div class="topic">
+      <div class="topic" data-topic-id="1-2">
         <div class="topic-cell cs">
-          <div class="topic-cell-label">Computer Science</div>
-          <h4>Hexadecimal</h4>
-          <p>Hex as shorthand for binary; conversion between hex, binary and denary; use in colour codes and MAC addresses.</p>
-          <span class="activity-tag cs">Colour picker hex challenge</span>
+          <div class="cell-content">
+            <div class="topic-cell-label">Computer Science</div>
+            <h4>Hexadecimal</h4>
+            <p>Hex as shorthand for binary; conversion between hex, binary and denary; colour codes and MAC addresses.</p>
+            <span class="activity-tag cs">Colour picker hex challenge</span>
+          </div>
+          <span class="hidden-label">CS</span>
         </div>
         <div class="topic-cell maths">
-          <div class="topic-cell-label">Maths</div>
-          <h4>Working in Different Bases</h4>
-          <p>Extending place-value understanding to base-16; multiplying by powers of 16; mental arithmetic with larger bases.</p>
-          <span class="activity-tag maths">Base conversion worksheet</span>
+          <button class="cell-toggle-btn" onclick="toggleCell(this)" title="Hide this card">×</button>
+          <div class="cell-content">
+            <div class="topic-cell-label">Maths</div>
+            <h4>Working in Different Bases</h4>
+            <p>Extending place-value understanding to base-16; multiplying by powers of 16; mental arithmetic with larger bases.</p>
+            <span class="activity-tag maths">Base conversion worksheet</span>
+          </div>
+          <span class="hidden-label">Maths</span>
         </div>
         <div class="topic-cell science">
-          <div class="topic-cell-label">Science</div>
-          <h4>Colour &amp; Light Spectrum</h4>
-          <p>How RGB hex values relate to the visible light spectrum; additive colour mixing in Physics optics unit.</p>
-          <span class="activity-tag science">RGB LED colour mixing</span>
+          <button class="cell-toggle-btn" onclick="toggleCell(this)" title="Hide this card">×</button>
+          <div class="cell-content">
+            <div class="topic-cell-label">Science</div>
+            <h4>Colour &amp; Light Spectrum</h4>
+            <p>How RGB hex values relate to the visible light spectrum; additive colour mixing in Physics optics unit.</p>
+            <span class="activity-tag science">RGB LED colour mixing</span>
+          </div>
+          <span class="hidden-label">Science</span>
         </div>
         <div class="topic-cell business">
-          <div class="topic-cell-label">Business</div>
-          <h4>Branding &amp; Digital Design</h4>
-          <p>Hex colour codes in brand guidelines; consistency of digital colour across marketing materials.</p>
-          <span class="activity-tag business">Brand colour palette task</span>
+          <button class="cell-toggle-btn" onclick="toggleCell(this)" title="Hide this card">×</button>
+          <div class="cell-content">
+            <div class="topic-cell-label">Business</div>
+            <h4>Branding &amp; Digital Design</h4>
+            <p>Hex colour codes in brand guidelines; consistency of digital colour across marketing materials.</p>
+            <span class="activity-tag business">Brand colour palette task</span>
+          </div>
+          <span class="hidden-label">Business</span>
         </div>
       </div>
+      <button class="add-custom-btn" onclick="openCustomModal('1-2')">+ Add cross-curricular topic</button>
 
-      <!-- Topic 1.3 -->
-      <div class="topic">
+      <div class="topic" data-topic-id="1-3">
         <div class="topic-cell cs">
-          <div class="topic-cell-label">Computer Science</div>
-          <h4>Units of Data Storage</h4>
-          <p>Bits, nibbles, bytes, KB, MB, GB, TB; calculating file sizes for images and sound.</p>
-          <span class="activity-tag cs">File size calculator</span>
+          <div class="cell-content">
+            <div class="topic-cell-label">Computer Science</div>
+            <h4>Units of Data Storage</h4>
+            <p>Bits, nibbles, bytes, KB, MB, GB, TB; calculating file sizes for images and sound.</p>
+            <span class="activity-tag cs">File size calculator</span>
+          </div>
+          <span class="hidden-label">CS</span>
         </div>
         <div class="topic-cell maths">
-          <div class="topic-cell-label">Maths</div>
-          <h4>Standard Form &amp; Large Numbers</h4>
-          <p>Working with very large values (e.g. 1 TB = 10¹² bytes); converting between units using powers of 10 and 2.</p>
-          <span class="activity-tag maths">Unit conversion problems</span>
+          <button class="cell-toggle-btn" onclick="toggleCell(this)" title="Hide this card">×</button>
+          <div class="cell-content">
+            <div class="topic-cell-label">Maths</div>
+            <h4>Standard Form &amp; Large Numbers</h4>
+            <p>Working with very large values (e.g. 1 TB = 10¹² bytes); converting between units using powers of 10 and 2.</p>
+            <span class="activity-tag maths">Unit conversion problems</span>
+          </div>
+          <span class="hidden-label">Maths</span>
         </div>
         <div class="topic-cell science">
-          <div class="topic-cell-label">Science</div>
-          <h4>SI Prefixes</h4>
-          <p>Kilo, mega, giga prefixes in Science; comparing data units with physical measurement units (kg, MHz).</p>
-          <span class="activity-tag science">Prefix matching exercise</span>
+          <button class="cell-toggle-btn" onclick="toggleCell(this)" title="Hide this card">×</button>
+          <div class="cell-content">
+            <div class="topic-cell-label">Science</div>
+            <h4>SI Prefixes</h4>
+            <p>Kilo, mega, giga prefixes in Science; comparing data units with physical measurement units (kg, MHz).</p>
+            <span class="activity-tag science">Prefix matching exercise</span>
+          </div>
+          <span class="hidden-label">Science</span>
         </div>
         <div class="topic-cell business">
-          <div class="topic-cell-label">Business</div>
-          <h4>Cloud Storage Costs</h4>
-          <p>Comparing cloud storage plans (cost per GB); business decisions around data storage and scalability.</p>
-          <span class="activity-tag business">Cloud provider comparison</span>
+          <button class="cell-toggle-btn" onclick="toggleCell(this)" title="Hide this card">×</button>
+          <div class="cell-content">
+            <div class="topic-cell-label">Business</div>
+            <h4>Cloud Storage Costs</h4>
+            <p>Comparing cloud storage plans (cost per GB); business decisions around data storage and scalability.</p>
+            <span class="activity-tag business">Cloud provider comparison</span>
+          </div>
+          <span class="hidden-label">Business</span>
         </div>
       </div>
+      <button class="add-custom-btn" onclick="openCustomModal('1-3')">+ Add cross-curricular topic</button>
 
-      <!-- Topic 1.4 -->
-      <div class="topic">
+      <div class="topic" data-topic-id="1-4">
         <div class="topic-cell cs">
-          <div class="topic-cell-label">Computer Science</div>
-          <h4>Character Encoding (ASCII / Unicode)</h4>
-          <p>How characters map to binary values; ASCII table; why Unicode is needed for international character sets.</p>
-          <span class="activity-tag cs">Decode a secret message</span>
+          <div class="cell-content">
+            <div class="topic-cell-label">Computer Science</div>
+            <h4>Character Encoding (ASCII / Unicode)</h4>
+            <p>How characters map to binary values; ASCII table; why Unicode is needed for international character sets.</p>
+            <span class="activity-tag cs">Decode a secret message</span>
+          </div>
+          <span class="hidden-label">CS</span>
         </div>
         <div class="topic-cell maths">
-          <div class="topic-cell-label">Maths</div>
-          <h4>Sequences &amp; Mapping</h4>
-          <p>One-to-one mapping (function concept); character ↔ number as an example of a mathematical function.</p>
-          <span class="activity-tag maths">Function machines with ASCII</span>
+          <button class="cell-toggle-btn" onclick="toggleCell(this)" title="Hide this card">×</button>
+          <div class="cell-content">
+            <div class="topic-cell-label">Maths</div>
+            <h4>Sequences &amp; Mapping</h4>
+            <p>One-to-one mapping (function concept); character ↔ number as an example of a mathematical function.</p>
+            <span class="activity-tag maths">Function machines with ASCII</span>
+          </div>
+          <span class="hidden-label">Maths</span>
         </div>
         <div class="topic-cell science">
-          <div class="topic-cell-label">Science</div>
-          <h4>—</h4>
-          <p>Limited direct link. Optional: encoding in DNA (base-4 system using A, T, C, G) as a biological parallel.</p>
-          <span class="activity-tag science">DNA as data storage</span>
+          <button class="cell-toggle-btn" onclick="toggleCell(this)" title="Hide this card">×</button>
+          <div class="cell-content">
+            <div class="topic-cell-label">Science</div>
+            <h4>—</h4>
+            <p>Limited direct link. Optional: encoding in DNA (base-4 system using A, T, C, G) as a biological parallel.</p>
+            <span class="activity-tag science">DNA as data storage</span>
+          </div>
+          <span class="hidden-label">Science</span>
         </div>
         <div class="topic-cell business">
-          <div class="topic-cell-label">Business</div>
-          <h4>Globalisation &amp; Localisation</h4>
-          <p>Why Unicode matters for international businesses; localising software and websites for global markets.</p>
-          <span class="activity-tag business">Website localisation case study</span>
+          <button class="cell-toggle-btn" onclick="toggleCell(this)" title="Hide this card">×</button>
+          <div class="cell-content">
+            <div class="topic-cell-label">Business</div>
+            <h4>Globalisation &amp; Localisation</h4>
+            <p>Why Unicode matters for international businesses; localising software and websites for global markets.</p>
+            <span class="activity-tag business">Website localisation case study</span>
+          </div>
+          <span class="hidden-label">Business</span>
         </div>
       </div>
+      <button class="add-custom-btn" onclick="openCustomModal('1-4')">+ Add cross-curricular topic</button>
 
-      <!-- Topic 1.5 -->
-      <div class="topic">
+      <div class="topic" data-topic-id="1-5">
         <div class="topic-cell cs">
-          <div class="topic-cell-label">Computer Science</div>
-          <h4>Images &amp; Sound Representation</h4>
-          <p>Pixels, resolution, colour depth, metadata; sampling rate and bit depth for sound; calculating file sizes.</p>
-          <span class="activity-tag cs">Pixel art → binary grid</span>
+          <div class="cell-content">
+            <div class="topic-cell-label">Computer Science</div>
+            <h4>Images &amp; Sound Representation</h4>
+            <p>Pixels, resolution, colour depth, metadata; sampling rate and bit depth for sound; calculating file sizes.</p>
+            <span class="activity-tag cs">Pixel art → binary grid</span>
+          </div>
+          <span class="hidden-label">CS</span>
         </div>
         <div class="topic-cell maths">
-          <div class="topic-cell-label">Maths</div>
-          <h4>Area, Grids &amp; Proportionality</h4>
-          <p>Image dimensions as width × height; proportional reasoning when resizing; calculating area (pixels).</p>
-          <span class="activity-tag maths">Resolution ratio problems</span>
+          <button class="cell-toggle-btn" onclick="toggleCell(this)" title="Hide this card">×</button>
+          <div class="cell-content">
+            <div class="topic-cell-label">Maths</div>
+            <h4>Area, Grids &amp; Proportionality</h4>
+            <p>Image dimensions as width × height; proportional reasoning when resizing; calculating area (pixels).</p>
+            <span class="activity-tag maths">Resolution ratio problems</span>
+          </div>
+          <span class="hidden-label">Maths</span>
         </div>
         <div class="topic-cell science">
-          <div class="topic-cell-label">Science</div>
-          <h4>Waves — Sound &amp; Light</h4>
-          <p>Frequency, amplitude and wavelength in Physics waves unit; sampling as discrete approximation of continuous waves.</p>
-          <span class="activity-tag science">Sampling frequency demo</span>
+          <button class="cell-toggle-btn" onclick="toggleCell(this)" title="Hide this card">×</button>
+          <div class="cell-content">
+            <div class="topic-cell-label">Science</div>
+            <h4>Waves — Sound &amp; Light</h4>
+            <p>Frequency, amplitude and wavelength in Physics waves unit; sampling as discrete approximation of continuous waves.</p>
+            <span class="activity-tag science">Sampling frequency demo</span>
+          </div>
+          <span class="hidden-label">Science</span>
         </div>
         <div class="topic-cell business">
-          <div class="topic-cell-label">Business</div>
-          <h4>Digital Media &amp; Marketing</h4>
-          <p>Image quality vs file size trade-offs in web design and advertising; compression for faster page loads.</p>
-          <span class="activity-tag business">Optimise an ad image task</span>
+          <button class="cell-toggle-btn" onclick="toggleCell(this)" title="Hide this card">×</button>
+          <div class="cell-content">
+            <div class="topic-cell-label">Business</div>
+            <h4>Digital Media &amp; Marketing</h4>
+            <p>Image quality vs file size trade-offs in web design and advertising; compression for faster page loads.</p>
+            <span class="activity-tag business">Optimise an ad image task</span>
+          </div>
+          <span class="hidden-label">Business</span>
         </div>
       </div>
+      <button class="add-custom-btn" onclick="openCustomModal('1-5')">+ Add cross-curricular topic</button>
 
     </div>
   </div>
@@ -518,86 +822,122 @@
     </div>
     <div class="unit-body">
 
-      <div class="topic">
+      <div class="topic" data-topic-id="2-1">
         <div class="topic-cell cs">
-          <div class="topic-cell-label">Computer Science</div>
-          <h4>CPU Architecture (FDE Cycle)</h4>
-          <p>Von Neumann architecture; ALU, CU, registers, buses; fetch-decode-execute cycle; clock speed, cores, cache.</p>
-          <span class="activity-tag cs">FDE cycle trace activity</span>
+          <div class="cell-content">
+            <div class="topic-cell-label">Computer Science</div>
+            <h4>CPU Architecture (FDE Cycle)</h4>
+            <p>Von Neumann architecture; ALU, CU, registers, buses; fetch-decode-execute cycle; clock speed, cores, cache.</p>
+            <span class="activity-tag cs">FDE cycle trace activity</span>
+          </div><span class="hidden-label">CS</span>
         </div>
         <div class="topic-cell maths">
-          <div class="topic-cell-label">Maths</div>
-          <h4>Algorithms &amp; Sequences</h4>
-          <p>Sequential instruction processing as an ordered algorithm; clock speed measured in Hz (frequency).</p>
-          <span class="activity-tag maths">Frequency/period calculations</span>
+          <button class="cell-toggle-btn" onclick="toggleCell(this)" title="Hide this card">×</button>
+          <div class="cell-content">
+            <div class="topic-cell-label">Maths</div>
+            <h4>Algorithms &amp; Sequences</h4>
+            <p>Sequential instruction processing as an ordered algorithm; clock speed measured in Hz (frequency).</p>
+            <span class="activity-tag maths">Frequency/period calculations</span>
+          </div><span class="hidden-label">Maths</span>
         </div>
         <div class="topic-cell science">
-          <div class="topic-cell-label">Science</div>
-          <h4>Electricity &amp; Components</h4>
-          <p>Electrical circuits powering processors; voltage, current, resistance; energy consumption of computing hardware.</p>
-          <span class="activity-tag science">Circuit building with logic gates</span>
+          <button class="cell-toggle-btn" onclick="toggleCell(this)" title="Hide this card">×</button>
+          <div class="cell-content">
+            <div class="topic-cell-label">Science</div>
+            <h4>Electricity &amp; Components</h4>
+            <p>Electrical circuits powering processors; voltage, current, resistance; energy consumption of computing hardware.</p>
+            <span class="activity-tag science">Circuit building with logic gates</span>
+          </div><span class="hidden-label">Science</span>
         </div>
         <div class="topic-cell business">
-          <div class="topic-cell-label">Business</div>
-          <h4>Technology &amp; Productivity</h4>
-          <p>How processor improvements drive business efficiency; Moore's Law and technology investment decisions.</p>
-          <span class="activity-tag business">Tech upgrade cost–benefit</span>
+          <button class="cell-toggle-btn" onclick="toggleCell(this)" title="Hide this card">×</button>
+          <div class="cell-content">
+            <div class="topic-cell-label">Business</div>
+            <h4>Technology &amp; Productivity</h4>
+            <p>How processor improvements drive business efficiency; Moore's Law and technology investment decisions.</p>
+            <span class="activity-tag business">Tech upgrade cost–benefit</span>
+          </div><span class="hidden-label">Business</span>
         </div>
       </div>
+      <button class="add-custom-btn" onclick="openCustomModal('2-1')">+ Add cross-curricular topic</button>
 
-      <div class="topic">
+      <div class="topic" data-topic-id="2-2">
         <div class="topic-cell cs">
-          <div class="topic-cell-label">Computer Science</div>
-          <h4>Boolean Logic</h4>
-          <p>AND, OR, NOT gates; truth tables; combining gates; simplifying Boolean expressions.</p>
-          <span class="activity-tag cs">Truth table challenge</span>
+          <div class="cell-content">
+            <div class="topic-cell-label">Computer Science</div>
+            <h4>Boolean Logic</h4>
+            <p>AND, OR, NOT gates; truth tables; combining gates; simplifying Boolean expressions.</p>
+            <span class="activity-tag cs">Truth table challenge</span>
+          </div><span class="hidden-label">CS</span>
         </div>
         <div class="topic-cell maths">
-          <div class="topic-cell-label">Maths</div>
-          <h4>Logic &amp; Proof</h4>
-          <p>Logical connectives (and, or, not) in mathematical reasoning; Venn diagrams for set operations matching Boolean logic.</p>
-          <span class="activity-tag maths">Venn → truth table mapping</span>
+          <button class="cell-toggle-btn" onclick="toggleCell(this)" title="Hide this card">×</button>
+          <div class="cell-content">
+            <div class="topic-cell-label">Maths</div>
+            <h4>Logic &amp; Proof</h4>
+            <p>Logical connectives (and, or, not) in mathematical reasoning; Venn diagrams for set operations matching Boolean logic.</p>
+            <span class="activity-tag maths">Venn → truth table mapping</span>
+          </div><span class="hidden-label">Maths</span>
         </div>
         <div class="topic-cell science">
-          <div class="topic-cell-label">Science</div>
-          <h4>Logic Gates (Electronics)</h4>
-          <p>Physical logic gates in circuits; combining gates to build half-adders; transistors as switches.</p>
-          <span class="activity-tag science">Build a half-adder circuit</span>
+          <button class="cell-toggle-btn" onclick="toggleCell(this)" title="Hide this card">×</button>
+          <div class="cell-content">
+            <div class="topic-cell-label">Science</div>
+            <h4>Logic Gates (Electronics)</h4>
+            <p>Physical logic gates in circuits; combining gates to build half-adders; transistors as switches.</p>
+            <span class="activity-tag science">Build a half-adder circuit</span>
+          </div><span class="hidden-label">Science</span>
         </div>
         <div class="topic-cell business">
-          <div class="topic-cell-label">Business</div>
-          <h4>Decision-Making Models</h4>
-          <p>IF-THEN decision rules in business processes; decision trees mapping to AND/OR conditions.</p>
-          <span class="activity-tag business">Decision tree for product launch</span>
+          <button class="cell-toggle-btn" onclick="toggleCell(this)" title="Hide this card">×</button>
+          <div class="cell-content">
+            <div class="topic-cell-label">Business</div>
+            <h4>Decision-Making Models</h4>
+            <p>IF-THEN decision rules in business processes; decision trees mapping to AND/OR conditions.</p>
+            <span class="activity-tag business">Decision tree for product launch</span>
+          </div><span class="hidden-label">Business</span>
         </div>
       </div>
+      <button class="add-custom-btn" onclick="openCustomModal('2-2')">+ Add cross-curricular topic</button>
 
-      <div class="topic">
+      <div class="topic" data-topic-id="2-3">
         <div class="topic-cell cs">
-          <div class="topic-cell-label">Computer Science</div>
-          <h4>Memory &amp; Storage</h4>
-          <p>RAM vs ROM; volatile vs non-volatile; magnetic, optical, solid-state storage; virtual memory.</p>
-          <span class="activity-tag cs">Storage comparison table</span>
+          <div class="cell-content">
+            <div class="topic-cell-label">Computer Science</div>
+            <h4>Memory &amp; Storage</h4>
+            <p>RAM vs ROM; volatile vs non-volatile; magnetic, optical, solid-state storage; virtual memory.</p>
+            <span class="activity-tag cs">Storage comparison table</span>
+          </div><span class="hidden-label">CS</span>
         </div>
         <div class="topic-cell maths">
-          <div class="topic-cell-label">Maths</div>
-          <h4>Capacity &amp; Comparison</h4>
-          <p>Comparing storage capacities using inequalities and ratio; cost-per-GB calculations.</p>
-          <span class="activity-tag maths">Best-buy storage problem</span>
+          <button class="cell-toggle-btn" onclick="toggleCell(this)" title="Hide this card">×</button>
+          <div class="cell-content">
+            <div class="topic-cell-label">Maths</div>
+            <h4>Capacity &amp; Comparison</h4>
+            <p>Comparing storage capacities using inequalities and ratio; cost-per-GB calculations.</p>
+            <span class="activity-tag maths">Best-buy storage problem</span>
+          </div><span class="hidden-label">Maths</span>
         </div>
         <div class="topic-cell science">
-          <div class="topic-cell-label">Science</div>
-          <h4>Magnetism &amp; Materials</h4>
-          <p>Magnetic storage and ferromagnetic materials; optical storage and laser physics; semiconductor properties in SSDs.</p>
-          <span class="activity-tag science">Material properties investigation</span>
+          <button class="cell-toggle-btn" onclick="toggleCell(this)" title="Hide this card">×</button>
+          <div class="cell-content">
+            <div class="topic-cell-label">Science</div>
+            <h4>Magnetism &amp; Materials</h4>
+            <p>Magnetic storage and ferromagnetic materials; optical storage and laser physics; semiconductor properties in SSDs.</p>
+            <span class="activity-tag science">Material properties investigation</span>
+          </div><span class="hidden-label">Science</span>
         </div>
         <div class="topic-cell business">
-          <div class="topic-cell-label">Business</div>
-          <h4>IT Procurement</h4>
-          <p>Choosing storage solutions for a business; balancing cost, speed, capacity and reliability in procurement.</p>
-          <span class="activity-tag business">Server vs cloud cost analysis</span>
+          <button class="cell-toggle-btn" onclick="toggleCell(this)" title="Hide this card">×</button>
+          <div class="cell-content">
+            <div class="topic-cell-label">Business</div>
+            <h4>IT Procurement</h4>
+            <p>Choosing storage solutions for a business; balancing cost, speed, capacity and reliability in procurement.</p>
+            <span class="activity-tag business">Server vs cloud cost analysis</span>
+          </div><span class="hidden-label">Business</span>
         </div>
       </div>
+      <button class="add-custom-btn" onclick="openCustomModal('2-3')">+ Add cross-curricular topic</button>
 
     </div>
   </div>
@@ -612,59 +952,83 @@
     </div>
     <div class="unit-body">
 
-      <div class="topic">
+      <div class="topic" data-topic-id="3-1">
         <div class="topic-cell cs">
-          <div class="topic-cell-label">Computer Science</div>
-          <h4>Network Topologies &amp; Protocols</h4>
-          <p>Star, mesh topologies; TCP/IP, HTTP, FTP; packet switching; IP/MAC addressing; DNS.</p>
-          <span class="activity-tag cs">Packet routing simulation</span>
+          <div class="cell-content">
+            <div class="topic-cell-label">Computer Science</div>
+            <h4>Network Topologies &amp; Protocols</h4>
+            <p>Star, mesh topologies; TCP/IP, HTTP, FTP; packet switching; IP/MAC addressing; DNS.</p>
+            <span class="activity-tag cs">Packet routing simulation</span>
+          </div><span class="hidden-label">CS</span>
         </div>
         <div class="topic-cell maths">
-          <div class="topic-cell-label">Maths</div>
-          <h4>Graph Theory (Extension)</h4>
-          <p>Networks as graphs with nodes and edges; shortest path problems; routing as an optimisation problem.</p>
-          <span class="activity-tag maths">Dijkstra's shortest path</span>
+          <button class="cell-toggle-btn" onclick="toggleCell(this)" title="Hide this card">×</button>
+          <div class="cell-content">
+            <div class="topic-cell-label">Maths</div>
+            <h4>Graph Theory (Extension)</h4>
+            <p>Networks as graphs with nodes and edges; shortest path problems; routing as an optimisation problem.</p>
+            <span class="activity-tag maths">Dijkstra's shortest path</span>
+          </div><span class="hidden-label">Maths</span>
         </div>
         <div class="topic-cell science">
-          <div class="topic-cell-label">Science</div>
-          <h4>Electromagnetic Waves</h4>
-          <p>Wi-Fi and radio frequencies on the EM spectrum; fibre optics and total internal reflection.</p>
-          <span class="activity-tag science">EM spectrum poster activity</span>
+          <button class="cell-toggle-btn" onclick="toggleCell(this)" title="Hide this card">×</button>
+          <div class="cell-content">
+            <div class="topic-cell-label">Science</div>
+            <h4>Electromagnetic Waves</h4>
+            <p>Wi-Fi and radio frequencies on the EM spectrum; fibre optics and total internal reflection.</p>
+            <span class="activity-tag science">EM spectrum poster activity</span>
+          </div><span class="hidden-label">Science</span>
         </div>
         <div class="topic-cell business">
-          <div class="topic-cell-label">Business</div>
-          <h4>E-Commerce &amp; Communication</h4>
-          <p>How networks enable online business; impact of internet on business models; cloud-based collaboration.</p>
-          <span class="activity-tag business">E-commerce business plan</span>
+          <button class="cell-toggle-btn" onclick="toggleCell(this)" title="Hide this card">×</button>
+          <div class="cell-content">
+            <div class="topic-cell-label">Business</div>
+            <h4>E-Commerce &amp; Communication</h4>
+            <p>How networks enable online business; impact of internet on business models; cloud-based collaboration.</p>
+            <span class="activity-tag business">E-commerce business plan</span>
+          </div><span class="hidden-label">Business</span>
         </div>
       </div>
+      <button class="add-custom-btn" onclick="openCustomModal('3-1')">+ Add cross-curricular topic</button>
 
-      <div class="topic">
+      <div class="topic" data-topic-id="3-2">
         <div class="topic-cell cs">
-          <div class="topic-cell-label">Computer Science</div>
-          <h4>Cyber Security &amp; Threats</h4>
-          <p>Malware, phishing, SQL injection, brute force; firewalls, encryption, authentication, penetration testing.</p>
-          <span class="activity-tag cs">Spot the phishing email</span>
+          <div class="cell-content">
+            <div class="topic-cell-label">Computer Science</div>
+            <h4>Cyber Security &amp; Threats</h4>
+            <p>Malware, phishing, SQL injection, brute force; firewalls, encryption, authentication, penetration testing.</p>
+            <span class="activity-tag cs">Spot the phishing email</span>
+          </div><span class="hidden-label">CS</span>
         </div>
         <div class="topic-cell maths">
-          <div class="topic-cell-label">Maths</div>
-          <h4>Probability &amp; Combinatorics</h4>
-          <p>Password strength as combinatorics (permutations); probability of brute-force success; expected number of attempts.</p>
-          <span class="activity-tag maths">Password crack-time calculator</span>
+          <button class="cell-toggle-btn" onclick="toggleCell(this)" title="Hide this card">×</button>
+          <div class="cell-content">
+            <div class="topic-cell-label">Maths</div>
+            <h4>Probability &amp; Combinatorics</h4>
+            <p>Password strength as combinatorics (permutations); probability of brute-force success; expected attempts.</p>
+            <span class="activity-tag maths">Password crack-time calculator</span>
+          </div><span class="hidden-label">Maths</span>
         </div>
         <div class="topic-cell science">
-          <div class="topic-cell-label">Science</div>
-          <h4>—</h4>
-          <p>Limited direct link. Optional: biometric authentication linking to Biology (fingerprints, iris patterns, DNA).</p>
-          <span class="activity-tag science">Biometrics discussion</span>
+          <button class="cell-toggle-btn" onclick="toggleCell(this)" title="Hide this card">×</button>
+          <div class="cell-content">
+            <div class="topic-cell-label">Science</div>
+            <h4>—</h4>
+            <p>Limited direct link. Optional: biometric authentication linking to Biology (fingerprints, iris patterns, DNA).</p>
+            <span class="activity-tag science">Biometrics discussion</span>
+          </div><span class="hidden-label">Science</span>
         </div>
         <div class="topic-cell business">
-          <div class="topic-cell-label">Business</div>
-          <h4>Data Protection &amp; GDPR</h4>
-          <p>Legal responsibilities for customer data; cost of data breaches; reputation and trust in business.</p>
-          <span class="activity-tag business">Data breach impact analysis</span>
+          <button class="cell-toggle-btn" onclick="toggleCell(this)" title="Hide this card">×</button>
+          <div class="cell-content">
+            <div class="topic-cell-label">Business</div>
+            <h4>Data Protection &amp; GDPR</h4>
+            <p>Legal responsibilities for customer data; cost of data breaches; reputation and trust in business.</p>
+            <span class="activity-tag business">Data breach impact analysis</span>
+          </div><span class="hidden-label">Business</span>
         </div>
       </div>
+      <button class="add-custom-btn" onclick="openCustomModal('3-2')">+ Add cross-curricular topic</button>
 
     </div>
   </div>
@@ -679,59 +1043,83 @@
     </div>
     <div class="unit-body">
 
-      <div class="topic">
+      <div class="topic" data-topic-id="4-1">
         <div class="topic-cell cs">
-          <div class="topic-cell-label">Computer Science</div>
-          <h4>Searching Algorithms</h4>
-          <p>Linear search, binary search; comparing efficiency; when each is appropriate.</p>
-          <span class="activity-tag cs">Card-sort search races</span>
+          <div class="cell-content">
+            <div class="topic-cell-label">Computer Science</div>
+            <h4>Searching Algorithms</h4>
+            <p>Linear search, binary search; comparing efficiency; when each is appropriate.</p>
+            <span class="activity-tag cs">Card-sort search races</span>
+          </div><span class="hidden-label">CS</span>
         </div>
         <div class="topic-cell maths">
-          <div class="topic-cell-label">Maths</div>
-          <h4>Inequalities &amp; Halving</h4>
-          <p>Binary search as repeated halving (link to bisection method); logarithmic vs linear growth; log₂(n) steps.</p>
-          <span class="activity-tag maths">Halving intervals on number line</span>
+          <button class="cell-toggle-btn" onclick="toggleCell(this)" title="Hide this card">×</button>
+          <div class="cell-content">
+            <div class="topic-cell-label">Maths</div>
+            <h4>Inequalities &amp; Halving</h4>
+            <p>Binary search as repeated halving (link to bisection method); logarithmic vs linear growth; log₂(n) steps.</p>
+            <span class="activity-tag maths">Halving intervals on number line</span>
+          </div><span class="hidden-label">Maths</span>
         </div>
         <div class="topic-cell science">
-          <div class="topic-cell-label">Science</div>
-          <h4>Scientific Method</h4>
-          <p>Systematic searching as controlled experimentation; eliminating variables; efficiency in experimental design.</p>
-          <span class="activity-tag science">Fair test planning parallel</span>
+          <button class="cell-toggle-btn" onclick="toggleCell(this)" title="Hide this card">×</button>
+          <div class="cell-content">
+            <div class="topic-cell-label">Science</div>
+            <h4>Scientific Method</h4>
+            <p>Systematic searching as controlled experimentation; eliminating variables; efficiency in experimental design.</p>
+            <span class="activity-tag science">Fair test planning parallel</span>
+          </div><span class="hidden-label">Science</span>
         </div>
         <div class="topic-cell business">
-          <div class="topic-cell-label">Business</div>
-          <h4>Market Research Methods</h4>
-          <p>Searching databases for market data; filtering and sorting customer records; efficiency in data retrieval.</p>
-          <span class="activity-tag business">Database search scenario</span>
+          <button class="cell-toggle-btn" onclick="toggleCell(this)" title="Hide this card">×</button>
+          <div class="cell-content">
+            <div class="topic-cell-label">Business</div>
+            <h4>Market Research Methods</h4>
+            <p>Searching databases for market data; filtering and sorting customer records; efficiency in data retrieval.</p>
+            <span class="activity-tag business">Database search scenario</span>
+          </div><span class="hidden-label">Business</span>
         </div>
       </div>
+      <button class="add-custom-btn" onclick="openCustomModal('4-1')">+ Add cross-curricular topic</button>
 
-      <div class="topic">
+      <div class="topic" data-topic-id="4-2">
         <div class="topic-cell cs">
-          <div class="topic-cell-label">Computer Science</div>
-          <h4>Sorting Algorithms</h4>
-          <p>Bubble sort, merge sort, insertion sort; comparing time complexity; trace tables for sorting.</p>
-          <span class="activity-tag cs">Unplugged sorting with cards</span>
+          <div class="cell-content">
+            <div class="topic-cell-label">Computer Science</div>
+            <h4>Sorting Algorithms</h4>
+            <p>Bubble sort, merge sort, insertion sort; comparing time complexity; trace tables for sorting.</p>
+            <span class="activity-tag cs">Unplugged sorting with cards</span>
+          </div><span class="hidden-label">CS</span>
         </div>
         <div class="topic-cell maths">
-          <div class="topic-cell-label">Maths</div>
-          <h4>Ordering &amp; Comparing</h4>
-          <p>Ordering integers, decimals, fractions; comparison operators; understanding efficiency (n² vs n log n).</p>
-          <span class="activity-tag maths">Efficiency growth comparison graph</span>
+          <button class="cell-toggle-btn" onclick="toggleCell(this)" title="Hide this card">×</button>
+          <div class="cell-content">
+            <div class="topic-cell-label">Maths</div>
+            <h4>Ordering &amp; Comparing</h4>
+            <p>Ordering integers, decimals, fractions; comparison operators; understanding efficiency (n² vs n log n).</p>
+            <span class="activity-tag maths">Efficiency growth comparison graph</span>
+          </div><span class="hidden-label">Maths</span>
         </div>
         <div class="topic-cell science">
-          <div class="topic-cell-label">Science</div>
-          <h4>Classification &amp; Taxonomy</h4>
-          <p>Sorting and classifying organisms in Biology; hierarchical classification as a sorting system.</p>
-          <span class="activity-tag science">Classify species using keys</span>
+          <button class="cell-toggle-btn" onclick="toggleCell(this)" title="Hide this card">×</button>
+          <div class="cell-content">
+            <div class="topic-cell-label">Science</div>
+            <h4>Classification &amp; Taxonomy</h4>
+            <p>Sorting and classifying organisms in Biology; hierarchical classification as a sorting system.</p>
+            <span class="activity-tag science">Classify species using keys</span>
+          </div><span class="hidden-label">Science</span>
         </div>
         <div class="topic-cell business">
-          <div class="topic-cell-label">Business</div>
-          <h4>Operations &amp; Efficiency</h4>
-          <p>Sorting inventory, orders, priority; lean production and eliminating waste through efficient processes.</p>
-          <span class="activity-tag business">Warehouse sorting optimisation</span>
+          <button class="cell-toggle-btn" onclick="toggleCell(this)" title="Hide this card">×</button>
+          <div class="cell-content">
+            <div class="topic-cell-label">Business</div>
+            <h4>Operations &amp; Efficiency</h4>
+            <p>Sorting inventory, orders, priority; lean production and eliminating waste through efficient processes.</p>
+            <span class="activity-tag business">Warehouse sorting optimisation</span>
+          </div><span class="hidden-label">Business</span>
         </div>
       </div>
+      <button class="add-custom-btn" onclick="openCustomModal('4-2')">+ Add cross-curricular topic</button>
 
     </div>
   </div>
@@ -746,86 +1134,122 @@
     </div>
     <div class="unit-body">
 
-      <div class="topic">
+      <div class="topic" data-topic-id="5-1">
         <div class="topic-cell cs">
-          <div class="topic-cell-label">Computer Science</div>
-          <h4>Variables, Data Types &amp; Operations</h4>
-          <p>Integer, real, Boolean, string, character; assignment, arithmetic operators, string operations; casting.</p>
-          <span class="activity-tag cs">Type-casting challenge</span>
+          <div class="cell-content">
+            <div class="topic-cell-label">Computer Science</div>
+            <h4>Variables, Data Types &amp; Operations</h4>
+            <p>Integer, real, Boolean, string, character; assignment, arithmetic operators, string operations; casting.</p>
+            <span class="activity-tag cs">Type-casting challenge</span>
+          </div><span class="hidden-label">CS</span>
         </div>
         <div class="topic-cell maths">
-          <div class="topic-cell-label">Maths</div>
-          <h4>Algebra — Variables &amp; Expressions</h4>
-          <p>Variables as unknowns; substitution into expressions; integer vs decimal (real) number types; BIDMAS / operator precedence.</p>
-          <span class="activity-tag maths">Substitution into code expressions</span>
+          <button class="cell-toggle-btn" onclick="toggleCell(this)" title="Hide this card">×</button>
+          <div class="cell-content">
+            <div class="topic-cell-label">Maths</div>
+            <h4>Algebra — Variables &amp; Expressions</h4>
+            <p>Variables as unknowns; substitution into expressions; integer vs decimal (real) number types; BIDMAS / operator precedence.</p>
+            <span class="activity-tag maths">Substitution into code expressions</span>
+          </div><span class="hidden-label">Maths</span>
         </div>
         <div class="topic-cell science">
-          <div class="topic-cell-label">Science</div>
-          <h4>Formulas &amp; Calculations</h4>
-          <p>Using formulas (F = ma, V = IR); substituting values; rearranging equations — same skill as evaluating code expressions.</p>
-          <span class="activity-tag science">Formula → pseudocode translation</span>
+          <button class="cell-toggle-btn" onclick="toggleCell(this)" title="Hide this card">×</button>
+          <div class="cell-content">
+            <div class="topic-cell-label">Science</div>
+            <h4>Formulas &amp; Calculations</h4>
+            <p>Using formulas (F = ma, V = IR); substituting values; rearranging equations — same skill as evaluating code expressions.</p>
+            <span class="activity-tag science">Formula → pseudocode translation</span>
+          </div><span class="hidden-label">Science</span>
         </div>
         <div class="topic-cell business">
-          <div class="topic-cell-label">Business</div>
-          <h4>Financial Calculations</h4>
-          <p>Revenue = price × quantity; profit margins; using variables in business formulas and spreadsheets.</p>
-          <span class="activity-tag business">Profit calculator program</span>
+          <button class="cell-toggle-btn" onclick="toggleCell(this)" title="Hide this card">×</button>
+          <div class="cell-content">
+            <div class="topic-cell-label">Business</div>
+            <h4>Financial Calculations</h4>
+            <p>Revenue = price × quantity; profit margins; using variables in business formulas and spreadsheets.</p>
+            <span class="activity-tag business">Profit calculator program</span>
+          </div><span class="hidden-label">Business</span>
         </div>
       </div>
+      <button class="add-custom-btn" onclick="openCustomModal('5-1')">+ Add cross-curricular topic</button>
 
-      <div class="topic">
+      <div class="topic" data-topic-id="5-2">
         <div class="topic-cell cs">
-          <div class="topic-cell-label">Computer Science</div>
-          <h4>Selection &amp; Iteration</h4>
-          <p>IF/ELIF/ELSE; FOR loops, WHILE loops; nested structures; flowcharts; dry-running with trace tables.</p>
-          <span class="activity-tag cs">Trace table exercises</span>
+          <div class="cell-content">
+            <div class="topic-cell-label">Computer Science</div>
+            <h4>Selection &amp; Iteration</h4>
+            <p>IF/ELIF/ELSE; FOR loops, WHILE loops; nested structures; flowcharts; dry-running with trace tables.</p>
+            <span class="activity-tag cs">Trace table exercises</span>
+          </div><span class="hidden-label">CS</span>
         </div>
         <div class="topic-cell maths">
-          <div class="topic-cell-label">Maths</div>
-          <h4>Iteration &amp; Trial and Improvement</h4>
-          <p>Iterative methods for solving equations; trial and improvement as a loop; sequences generated by rules (like FOR loops).</p>
-          <span class="activity-tag maths">Iterative equation solver</span>
+          <button class="cell-toggle-btn" onclick="toggleCell(this)" title="Hide this card">×</button>
+          <div class="cell-content">
+            <div class="topic-cell-label">Maths</div>
+            <h4>Iteration &amp; Trial and Improvement</h4>
+            <p>Iterative methods for solving equations; trial and improvement as a loop; sequences generated by rules.</p>
+            <span class="activity-tag maths">Iterative equation solver</span>
+          </div><span class="hidden-label">Maths</span>
         </div>
         <div class="topic-cell science">
-          <div class="topic-cell-label">Science</div>
-          <h4>Experimental Repetition</h4>
-          <p>Repeating experiments (iteration); conditional outcomes based on results (selection); recording in tables (trace tables).</p>
-          <span class="activity-tag science">Results table → trace table</span>
+          <button class="cell-toggle-btn" onclick="toggleCell(this)" title="Hide this card">×</button>
+          <div class="cell-content">
+            <div class="topic-cell-label">Science</div>
+            <h4>Experimental Repetition</h4>
+            <p>Repeating experiments (iteration); conditional outcomes based on results (selection); recording in tables.</p>
+            <span class="activity-tag science">Results table → trace table</span>
+          </div><span class="hidden-label">Science</span>
         </div>
         <div class="topic-cell business">
-          <div class="topic-cell-label">Business</div>
-          <h4>Decision-Making &amp; Workflows</h4>
-          <p>Business flowcharts for processes; IF conditions in quality control; iterative product development cycles.</p>
-          <span class="activity-tag business">QC flowchart design</span>
+          <button class="cell-toggle-btn" onclick="toggleCell(this)" title="Hide this card">×</button>
+          <div class="cell-content">
+            <div class="topic-cell-label">Business</div>
+            <h4>Decision-Making &amp; Workflows</h4>
+            <p>Business flowcharts for processes; IF conditions in quality control; iterative product development cycles.</p>
+            <span class="activity-tag business">QC flowchart design</span>
+          </div><span class="hidden-label">Business</span>
         </div>
       </div>
+      <button class="add-custom-btn" onclick="openCustomModal('5-2')">+ Add cross-curricular topic</button>
 
-      <div class="topic">
+      <div class="topic" data-topic-id="5-3">
         <div class="topic-cell cs">
-          <div class="topic-cell-label">Computer Science</div>
-          <h4>Arrays / Lists &amp; Data Structures</h4>
-          <p>1D and 2D arrays; indexing; traversal; records; common operations (append, remove, length).</p>
-          <span class="activity-tag cs">Array manipulation tasks</span>
+          <div class="cell-content">
+            <div class="topic-cell-label">Computer Science</div>
+            <h4>Arrays / Lists &amp; Data Structures</h4>
+            <p>1D and 2D arrays; indexing; traversal; records; common operations (append, remove, length).</p>
+            <span class="activity-tag cs">Array manipulation tasks</span>
+          </div><span class="hidden-label">CS</span>
         </div>
         <div class="topic-cell maths">
-          <div class="topic-cell-label">Maths</div>
-          <h4>Matrices &amp; Coordinates</h4>
-          <p>2D arrays as matrices; row/column indexing; coordinate pairs for grid references — same mental model as 2D arrays.</p>
-          <span class="activity-tag maths">Grid reference challenges</span>
+          <button class="cell-toggle-btn" onclick="toggleCell(this)" title="Hide this card">×</button>
+          <div class="cell-content">
+            <div class="topic-cell-label">Maths</div>
+            <h4>Matrices &amp; Coordinates</h4>
+            <p>2D arrays as matrices; row/column indexing; coordinate pairs for grid references.</p>
+            <span class="activity-tag maths">Grid reference challenges</span>
+          </div><span class="hidden-label">Maths</span>
         </div>
         <div class="topic-cell science">
-          <div class="topic-cell-label">Science</div>
-          <h4>Data Tables &amp; Recording</h4>
-          <p>Recording experimental data in tables (rows = records, columns = fields); systematic data organisation.</p>
-          <span class="activity-tag science">Experiment → 2D array mapping</span>
+          <button class="cell-toggle-btn" onclick="toggleCell(this)" title="Hide this card">×</button>
+          <div class="cell-content">
+            <div class="topic-cell-label">Science</div>
+            <h4>Data Tables &amp; Recording</h4>
+            <p>Recording experimental data in tables (rows = records, columns = fields); systematic data organisation.</p>
+            <span class="activity-tag science">Experiment → 2D array mapping</span>
+          </div><span class="hidden-label">Science</span>
         </div>
         <div class="topic-cell business">
-          <div class="topic-cell-label">Business</div>
-          <h4>Databases &amp; Spreadsheets</h4>
-          <p>Customer records as arrays of data; spreadsheet rows/columns; querying and filtering business data.</p>
-          <span class="activity-tag business">Spreadsheet data challenge</span>
+          <button class="cell-toggle-btn" onclick="toggleCell(this)" title="Hide this card">×</button>
+          <div class="cell-content">
+            <div class="topic-cell-label">Business</div>
+            <h4>Databases &amp; Spreadsheets</h4>
+            <p>Customer records as arrays of data; spreadsheet rows/columns; querying and filtering business data.</p>
+            <span class="activity-tag business">Spreadsheet data challenge</span>
+          </div><span class="hidden-label">Business</span>
         </div>
       </div>
+      <button class="add-custom-btn" onclick="openCustomModal('5-3')">+ Add cross-curricular topic</button>
 
     </div>
   </div>
@@ -840,59 +1264,83 @@
     </div>
     <div class="unit-body">
 
-      <div class="topic">
+      <div class="topic" data-topic-id="6-1">
         <div class="topic-cell cs">
-          <div class="topic-cell-label">Computer Science</div>
-          <h4>Ethical &amp; Environmental Impact</h4>
-          <p>E-waste, energy consumption of data centres; digital divide; privacy and surveillance; AI ethics; open source vs proprietary.</p>
-          <span class="activity-tag cs">Ethical dilemma debate</span>
+          <div class="cell-content">
+            <div class="topic-cell-label">Computer Science</div>
+            <h4>Ethical &amp; Environmental Impact</h4>
+            <p>E-waste, energy consumption of data centres; digital divide; privacy and surveillance; AI ethics; open source vs proprietary.</p>
+            <span class="activity-tag cs">Ethical dilemma debate</span>
+          </div><span class="hidden-label">CS</span>
         </div>
         <div class="topic-cell maths">
-          <div class="topic-cell-label">Maths</div>
-          <h4>Statistics &amp; Data Handling</h4>
-          <p>Interpreting data on e-waste, energy use, internet access; mean, median, charts; misleading statistics.</p>
-          <span class="activity-tag maths">Analyse e-waste data set</span>
+          <button class="cell-toggle-btn" onclick="toggleCell(this)" title="Hide this card">×</button>
+          <div class="cell-content">
+            <div class="topic-cell-label">Maths</div>
+            <h4>Statistics &amp; Data Handling</h4>
+            <p>Interpreting data on e-waste, energy use, internet access; mean, median, charts; misleading statistics.</p>
+            <span class="activity-tag maths">Analyse e-waste data set</span>
+          </div><span class="hidden-label">Maths</span>
         </div>
         <div class="topic-cell science">
-          <div class="topic-cell-label">Science</div>
-          <h4>Energy &amp; Environment</h4>
-          <p>Energy consumption of technology; carbon footprint of servers; rare earth metals in electronics; recycling and sustainability.</p>
-          <span class="activity-tag science">Carbon footprint calculation</span>
+          <button class="cell-toggle-btn" onclick="toggleCell(this)" title="Hide this card">×</button>
+          <div class="cell-content">
+            <div class="topic-cell-label">Science</div>
+            <h4>Energy &amp; Environment</h4>
+            <p>Energy consumption of technology; carbon footprint of servers; rare earth metals in electronics; recycling.</p>
+            <span class="activity-tag science">Carbon footprint calculation</span>
+          </div><span class="hidden-label">Science</span>
         </div>
         <div class="topic-cell business">
-          <div class="topic-cell-label">Business</div>
-          <h4>Ethics, Legislation &amp; CSR</h4>
-          <p>Data Protection Act / GDPR; Computer Misuse Act; corporate social responsibility; stakeholder impact of technology decisions.</p>
-          <span class="activity-tag business">CSR report on a tech firm</span>
+          <button class="cell-toggle-btn" onclick="toggleCell(this)" title="Hide this card">×</button>
+          <div class="cell-content">
+            <div class="topic-cell-label">Business</div>
+            <h4>Ethics, Legislation &amp; CSR</h4>
+            <p>Data Protection Act / GDPR; Computer Misuse Act; corporate social responsibility; stakeholder impact.</p>
+            <span class="activity-tag business">CSR report on a tech firm</span>
+          </div><span class="hidden-label">Business</span>
         </div>
       </div>
+      <button class="add-custom-btn" onclick="openCustomModal('6-1')">+ Add cross-curricular topic</button>
 
-      <div class="topic">
+      <div class="topic" data-topic-id="6-2">
         <div class="topic-cell cs">
-          <div class="topic-cell-label">Computer Science</div>
-          <h4>Legislation</h4>
-          <p>Data Protection Act 2018; Computer Misuse Act 1990; Copyright, Designs and Patents Act 1988; Freedom of Information Act.</p>
-          <span class="activity-tag cs">Match the law to the scenario</span>
+          <div class="cell-content">
+            <div class="topic-cell-label">Computer Science</div>
+            <h4>Legislation</h4>
+            <p>Data Protection Act 2018; Computer Misuse Act 1990; Copyright, Designs and Patents Act 1988; Freedom of Information Act.</p>
+            <span class="activity-tag cs">Match the law to the scenario</span>
+          </div><span class="hidden-label">CS</span>
         </div>
         <div class="topic-cell maths">
-          <div class="topic-cell-label">Maths</div>
-          <h4>—</h4>
-          <p>Limited direct link. Optional: analysing statistical data on cybercrime rates and trends over time.</p>
-          <span class="activity-tag maths">Cybercrime trend graphs</span>
+          <button class="cell-toggle-btn" onclick="toggleCell(this)" title="Hide this card">×</button>
+          <div class="cell-content">
+            <div class="topic-cell-label">Maths</div>
+            <h4>—</h4>
+            <p>Limited direct link. Optional: analysing statistical data on cybercrime rates and trends over time.</p>
+            <span class="activity-tag maths">Cybercrime trend graphs</span>
+          </div><span class="hidden-label">Maths</span>
         </div>
         <div class="topic-cell science">
-          <div class="topic-cell-label">Science</div>
-          <h4>Ethics in Science</h4>
-          <p>Parallels with ethics in scientific research (consent, data handling, animal testing); responsible innovation.</p>
-          <span class="activity-tag science">Ethics comparison discussion</span>
+          <button class="cell-toggle-btn" onclick="toggleCell(this)" title="Hide this card">×</button>
+          <div class="cell-content">
+            <div class="topic-cell-label">Science</div>
+            <h4>Ethics in Science</h4>
+            <p>Parallels with ethics in scientific research (consent, data handling, animal testing); responsible innovation.</p>
+            <span class="activity-tag science">Ethics comparison discussion</span>
+          </div><span class="hidden-label">Science</span>
         </div>
         <div class="topic-cell business">
-          <div class="topic-cell-label">Business</div>
-          <h4>Legal Environment of Business</h4>
-          <p>How legislation affects business operations; compliance costs; consequences of data breaches for businesses.</p>
-          <span class="activity-tag business">Compliance audit simulation</span>
+          <button class="cell-toggle-btn" onclick="toggleCell(this)" title="Hide this card">×</button>
+          <div class="cell-content">
+            <div class="topic-cell-label">Business</div>
+            <h4>Legal Environment of Business</h4>
+            <p>How legislation affects business operations; compliance costs; consequences of data breaches for businesses.</p>
+            <span class="activity-tag business">Compliance audit simulation</span>
+          </div><span class="hidden-label">Business</span>
         </div>
       </div>
+      <button class="add-custom-btn" onclick="openCustomModal('6-2')">+ Add cross-curricular topic</button>
 
     </div>
   </div>
@@ -903,16 +1351,218 @@
 
 </div>
 
+<!-- MODAL -->
+<div class="modal-overlay" id="customModal">
+  <div class="modal">
+    <h3>Add Cross-Curricular Topic</h3>
+    <label>Subject Name</label>
+    <input type="text" id="modalSubject" placeholder="e.g. English, Geography, Art, PE…">
+    <label>Topic Title</label>
+    <input type="text" id="modalTitle" placeholder="e.g. Persuasive Writing">
+    <label>Description</label>
+    <textarea id="modalDesc" placeholder="Brief description of how it links to the CS topic…"></textarea>
+    <label>Suggested Activity (optional)</label>
+    <input type="text" id="modalActivity" placeholder="e.g. Write a blog post about AI ethics">
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeCustomModal()">Cancel</button>
+      <button class="btn-save" onclick="saveCustomTopic()">Add Topic</button>
+    </div>
+  </div>
+</div>
+
 <script>
+// ── Unit collapse/expand ──
 function toggleUnit(id) {
-  const el = document.getElementById(id);
-  el.classList.toggle('open');
+  document.getElementById(id).classList.toggle('open');
 }
 
-// Open first unit by default (already set via class), close others on load
-document.addEventListener('DOMContentLoaded', () => {
-  // All units except first start closed (no 'open' class in HTML except unit1)
+// ── Edit mode ──
+function toggleEditMode() {
+  document.body.classList.toggle('edit-mode');
+  const btn = document.getElementById('editToggle');
+  const hint = document.getElementById('toolbarHint');
+  btn.classList.toggle('active');
+  hint.style.display = document.body.classList.contains('edit-mode') ? 'inline' : 'none';
+}
+
+// ── Cell toggle (hide / show) ──
+function toggleCell(btn) {
+  const cell = btn.closest('.topic-cell');
+  if (cell.classList.contains('hidden-cell')) {
+    // Restore
+    cell.classList.remove('hidden-cell');
+    btn.title = 'Hide this card';
+    btn.textContent = '×';
+  } else {
+    // Collapse
+    cell.classList.add('hidden-cell');
+    btn.title = 'Show this card';
+    btn.textContent = '+';
+  }
+  saveState();
+}
+
+// Also allow clicking the collapsed strip itself to restore
+document.addEventListener('click', (e) => {
+  const cell = e.target.closest('.topic-cell.hidden-cell');
+  if (!cell) return;
+  // Don't trigger if they clicked the button itself (button handler does it)
+  if (e.target.closest('.cell-toggle-btn')) return;
+  // Only restore if in edit mode
+  if (!document.body.classList.contains('edit-mode')) return;
+  const btn = cell.querySelector('.cell-toggle-btn');
+  if (btn) toggleCell(btn);
 });
+
+// ── Custom topic modal ──
+let currentTopicId = null;
+
+function openCustomModal(topicId) {
+  currentTopicId = topicId;
+  document.getElementById('modalSubject').value = '';
+  document.getElementById('modalTitle').value = '';
+  document.getElementById('modalDesc').value = '';
+  document.getElementById('modalActivity').value = '';
+  document.getElementById('customModal').classList.add('active');
+  setTimeout(() => document.getElementById('modalSubject').focus(), 100);
+}
+
+function closeCustomModal() {
+  document.getElementById('customModal').classList.remove('active');
+  currentTopicId = null;
+}
+
+function saveCustomTopic() {
+  const subject = document.getElementById('modalSubject').value.trim();
+  const title = document.getElementById('modalTitle').value.trim();
+  const desc = document.getElementById('modalDesc').value.trim();
+  const activity = document.getElementById('modalActivity').value.trim();
+  if (!subject || !title) return;
+
+  const topicRow = document.querySelector(`.topic[data-topic-id="${currentTopicId}"]`);
+  if (!topicRow) return;
+
+  const cell = document.createElement('div');
+  cell.className = 'topic-cell custom';
+  cell.innerHTML = `
+    <button class="cell-delete-btn" onclick="deleteCustomCell(this)" title="Remove this topic">×</button>
+    <button class="cell-toggle-btn" onclick="toggleCell(this)" title="Hide this card">×</button>
+    <div class="cell-content">
+      <div class="topic-cell-label">${escapeHtml(subject)}</div>
+      <h4>${escapeHtml(title)}</h4>
+      <p>${escapeHtml(desc)}</p>
+      ${activity ? `<span class="activity-tag custom">${escapeHtml(activity)}</span>` : ''}
+    </div>
+    <span class="hidden-label">${escapeHtml(subject)}</span>
+  `;
+  topicRow.appendChild(cell);
+  closeCustomModal();
+  saveState();
+}
+
+function deleteCustomCell(btn) {
+  const cell = btn.closest('.topic-cell');
+  cell.remove();
+  saveState();
+}
+
+function escapeHtml(str) {
+  const div = document.createElement('div');
+  div.textContent = str;
+  return div.innerHTML;
+}
+
+// ── Persistence (localStorage) ──
+const STORAGE_KEY = 'sow_cross_curricular_state';
+
+function saveState() {
+  const state = { hidden: {}, custom: {} };
+  document.querySelectorAll('.topic').forEach(topic => {
+    const id = topic.dataset.topicId;
+    // Hidden cells
+    const hiddenSubjects = [];
+    topic.querySelectorAll('.topic-cell.hidden-cell').forEach(cell => {
+      const subj = cell.classList.contains('maths') ? 'maths' :
+                   cell.classList.contains('science') ? 'science' :
+                   cell.classList.contains('business') ? 'business' : null;
+      if (subj) hiddenSubjects.push(subj);
+    });
+    if (hiddenSubjects.length) state.hidden[id] = hiddenSubjects;
+    // Custom cells
+    const customs = [];
+    topic.querySelectorAll('.topic-cell.custom').forEach(cell => {
+      const content = cell.querySelector('.cell-content');
+      if (!content) return;
+      customs.push({
+        subject: content.querySelector('.topic-cell-label')?.textContent || '',
+        title: content.querySelector('h4')?.textContent || '',
+        desc: content.querySelector('p')?.textContent || '',
+        activity: content.querySelector('.activity-tag')?.textContent || '',
+        isHidden: cell.classList.contains('hidden-cell')
+      });
+    });
+    if (customs.length) state.custom[id] = customs;
+  });
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch(e) {}
+}
+
+function loadState() {
+  let state;
+  try { state = JSON.parse(localStorage.getItem(STORAGE_KEY)); } catch(e) {}
+  if (!state) return;
+
+  // Restore hidden
+  if (state.hidden) {
+    Object.entries(state.hidden).forEach(([topicId, subjects]) => {
+      const topic = document.querySelector(`.topic[data-topic-id="${topicId}"]`);
+      if (!topic) return;
+      subjects.forEach(subj => {
+        const cell = topic.querySelector(`.topic-cell.${subj}`);
+        if (cell) {
+          cell.classList.add('hidden-cell');
+          const btn = cell.querySelector('.cell-toggle-btn');
+          if (btn) { btn.title = 'Show this card'; btn.textContent = '+'; }
+        }
+      });
+    });
+  }
+
+  // Restore custom
+  if (state.custom) {
+    Object.entries(state.custom).forEach(([topicId, customs]) => {
+      const topic = document.querySelector(`.topic[data-topic-id="${topicId}"]`);
+      if (!topic) return;
+      customs.forEach(c => {
+        const cell = document.createElement('div');
+        cell.className = 'topic-cell custom' + (c.isHidden ? ' hidden-cell' : '');
+        cell.innerHTML = `
+          <button class="cell-delete-btn" onclick="deleteCustomCell(this)" title="Remove this topic">×</button>
+          <button class="cell-toggle-btn" onclick="toggleCell(this)" title="${c.isHidden ? 'Show' : 'Hide'} this card">${c.isHidden ? '+' : '×'}</button>
+          <div class="cell-content">
+            <div class="topic-cell-label">${escapeHtml(c.subject)}</div>
+            <h4>${escapeHtml(c.title)}</h4>
+            <p>${escapeHtml(c.desc)}</p>
+            ${c.activity ? `<span class="activity-tag custom">${escapeHtml(c.activity)}</span>` : ''}
+          </div>
+          <span class="hidden-label">${escapeHtml(c.subject)}</span>
+        `;
+        topic.appendChild(cell);
+      });
+    });
+  }
+}
+
+// Close modal on Escape
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') closeCustomModal();
+});
+// Close modal on overlay click
+document.getElementById('customModal').addEventListener('click', (e) => {
+  if (e.target === document.getElementById('customModal')) closeCustomModal();
+});
+
+// Init
+loadState();
 </script>
 
 </body>
