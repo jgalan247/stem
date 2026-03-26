@@ -1,0 +1,919 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cross-Curricular Scheme of Work — GCSE Computer Science</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f7f5f0;
+    --surface: #ffffff;
+    --text: #1a1a1a;
+    --text-muted: #5a5a5a;
+    --accent-cs: #1e3a5f;
+    --accent-maths: #b5451b;
+    --accent-science: #2d6a4f;
+    --accent-business: #7b2d8b;
+    --border: #e0ddd6;
+    --border-light: #eceae4;
+    --highlight: #fef9e7;
+    --tag-cs-bg: #e8eef5;
+    --tag-maths-bg: #fbeee6;
+    --tag-science-bg: #e6f2ec;
+    --tag-business-bg: #f3e8f6;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* HEADER */
+  .header {
+    background: var(--accent-cs);
+    color: white;
+    padding: 3rem 2rem 2.5rem;
+    position: relative;
+    overflow: hidden;
+  }
+  .header::before {
+    content: '';
+    position: absolute;
+    top: -60%;
+    right: -10%;
+    width: 500px;
+    height: 500px;
+    background: radial-gradient(circle, rgba(255,255,255,0.06) 0%, transparent 70%);
+    border-radius: 50%;
+  }
+  .header-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 1;
+  }
+  .header h1 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 2.4rem;
+    font-weight: 400;
+    letter-spacing: -0.02em;
+    margin-bottom: 0.5rem;
+  }
+  .header .subtitle {
+    font-size: 1.05rem;
+    opacity: 0.85;
+    font-weight: 400;
+    max-width: 700px;
+  }
+  .header .meta-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+    margin-top: 1.5rem;
+    font-size: 0.85rem;
+    opacity: 0.75;
+  }
+  .header .meta-row span {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+
+  /* MAIN */
+  .main {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 2rem;
+  }
+
+  /* LEGEND */
+  .legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    padding: 1.2rem 1.5rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+  }
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.85rem;
+    font-weight: 500;
+  }
+  .legend-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .legend-dot.cs { background: var(--accent-cs); }
+  .legend-dot.maths { background: var(--accent-maths); }
+  .legend-dot.science { background: var(--accent-science); }
+  .legend-dot.business { background: var(--accent-business); }
+
+  /* INTRO */
+  .intro {
+    margin-bottom: 2.5rem;
+    font-size: 0.95rem;
+    color: var(--text-muted);
+    max-width: 800px;
+    line-height: 1.75;
+  }
+  .intro strong { color: var(--text); }
+
+  /* UNIT CARD */
+  .unit {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    margin-bottom: 1.5rem;
+    overflow: hidden;
+    transition: box-shadow 0.2s ease;
+  }
+  .unit:hover {
+    box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+  }
+  .unit-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1.2rem 1.5rem;
+    cursor: pointer;
+    user-select: none;
+    border-bottom: 1px solid transparent;
+    transition: border-color 0.2s;
+  }
+  .unit.open .unit-header {
+    border-bottom-color: var(--border-light);
+  }
+  .unit-number {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: white;
+    background: var(--accent-cs);
+    padding: 0.3rem 0.6rem;
+    border-radius: 6px;
+    flex-shrink: 0;
+    letter-spacing: 0.02em;
+  }
+  .unit-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.25rem;
+    flex: 1;
+  }
+  .unit-spec {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.72rem;
+    color: var(--text-muted);
+    background: var(--highlight);
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    white-space: nowrap;
+  }
+  .unit-toggle {
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: var(--border-light);
+    transition: transform 0.3s ease, background 0.2s;
+    flex-shrink: 0;
+  }
+  .unit.open .unit-toggle { transform: rotate(180deg); }
+  .unit-toggle svg {
+    width: 14px;
+    height: 14px;
+    stroke: var(--text-muted);
+    fill: none;
+    stroke-width: 2.5;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .unit-body {
+    display: none;
+    padding: 1.5rem;
+  }
+  .unit.open .unit-body { display: block; }
+
+  /* TOPIC ROW */
+  .topic {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    gap: 0;
+    border: 1px solid var(--border-light);
+    border-radius: 8px;
+    overflow: hidden;
+    margin-bottom: 1rem;
+  }
+  .topic:last-child { margin-bottom: 0; }
+  .topic-cell {
+    padding: 1rem 1.1rem;
+    font-size: 0.85rem;
+    line-height: 1.6;
+    border-right: 1px solid var(--border-light);
+  }
+  .topic-cell:last-child { border-right: none; }
+  .topic-cell.cs { border-top: 3px solid var(--accent-cs); }
+  .topic-cell.maths { border-top: 3px solid var(--accent-maths); }
+  .topic-cell.science { border-top: 3px solid var(--accent-science); }
+  .topic-cell.business { border-top: 3px solid var(--accent-business); }
+
+  .topic-cell-label {
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 0.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+  }
+  .topic-cell.cs .topic-cell-label { color: var(--accent-cs); }
+  .topic-cell.maths .topic-cell-label { color: var(--accent-maths); }
+  .topic-cell.science .topic-cell-label { color: var(--accent-science); }
+  .topic-cell.business .topic-cell-label { color: var(--accent-business); }
+
+  .topic-cell h4 {
+    font-size: 0.92rem;
+    font-weight: 600;
+    margin-bottom: 0.4rem;
+  }
+  .topic-cell p {
+    color: var(--text-muted);
+    font-size: 0.82rem;
+  }
+
+  .activity-tag {
+    display: inline-block;
+    font-size: 0.72rem;
+    font-weight: 500;
+    padding: 0.2rem 0.5rem;
+    border-radius: 4px;
+    margin-top: 0.4rem;
+    margin-right: 0.3rem;
+  }
+  .activity-tag.cs { background: var(--tag-cs-bg); color: var(--accent-cs); }
+  .activity-tag.maths { background: var(--tag-maths-bg); color: var(--accent-maths); }
+  .activity-tag.science { background: var(--tag-science-bg); color: var(--accent-science); }
+  .activity-tag.business { background: var(--tag-business-bg); color: var(--accent-business); }
+
+  /* COLUMN HEADERS (inside unit) */
+  .topic-headers {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    gap: 0;
+    margin-bottom: 0.75rem;
+  }
+  .topic-col-head {
+    font-size: 0.72rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    padding: 0 0.3rem;
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+  }
+  .topic-col-head.cs { color: var(--accent-cs); }
+  .topic-col-head.maths { color: var(--accent-maths); }
+  .topic-col-head.science { color: var(--accent-science); }
+  .topic-col-head.business { color: var(--accent-business); }
+
+  /* FOOTER */
+  .footer {
+    text-align: center;
+    padding: 2rem;
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    border-top: 1px solid var(--border);
+    margin-top: 1rem;
+  }
+
+  /* RESPONSIVE */
+  @media (max-width: 900px) {
+    .topic {
+      grid-template-columns: 1fr;
+    }
+    .topic-cell {
+      border-right: none;
+      border-bottom: 1px solid var(--border-light);
+    }
+    .topic-cell:last-child { border-bottom: none; }
+    .topic-headers { display: none; }
+    .header h1 { font-size: 1.8rem; }
+    .unit-spec { display: none; }
+  }
+
+  /* PRINT */
+  @media print {
+    body { background: white; font-size: 10pt; }
+    .unit { break-inside: avoid; }
+    .unit-body { display: block !important; }
+    .unit-toggle { display: none; }
+    .header { background: var(--accent-cs) !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-inner">
+    <h1>Cross-Curricular Scheme of Work</h1>
+    <p class="subtitle">GCSE Computer Science (Edexcel 1CP2) mapped against Maths, Science and Business — reinforcing shared concepts across the curriculum.</p>
+    <div class="meta-row">
+      <span>📋 Edexcel 1CP2</span>
+      <span>🎓 Flexible — Year 9 / 10 / 11</span>
+      <span>🔗 Maths · Science · Business</span>
+    </div>
+  </div>
+</div>
+
+<div class="main">
+
+  <div class="legend">
+    <div class="legend-item"><span class="legend-dot cs"></span> Computer Science</div>
+    <div class="legend-item"><span class="legend-dot maths"></span> Maths</div>
+    <div class="legend-item"><span class="legend-dot science"></span> Science (Physics)</div>
+    <div class="legend-item"><span class="legend-dot business"></span> Business Studies</div>
+  </div>
+
+  <p class="intro">
+    This Scheme of Work identifies where <strong>GCSE Computer Science</strong> topics directly overlap with content students encounter in Maths, Science and Business. The aim is to allow departments to <strong>coordinate timing</strong> so students meet the same underlying concept — place value, logic, data handling, systems thinking — in multiple subjects within the same half-term, strengthening retention and transfer. Each unit below is expandable and contains topic-level mappings with suggested cross-curricular activities.
+  </p>
+
+  <!-- ===================== UNIT 1 ===================== -->
+  <div class="unit open" id="unit1">
+    <div class="unit-header" onclick="toggleUnit('unit1')">
+      <span class="unit-number">UNIT 1</span>
+      <span class="unit-title">Data Representation</span>
+      <span class="unit-spec">1CP2 Topic 4</span>
+      <span class="unit-toggle"><svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></span>
+    </div>
+    <div class="unit-body">
+
+      <!-- Topic 1.1 -->
+      <div class="topic">
+        <div class="topic-cell cs">
+          <div class="topic-cell-label">Computer Science</div>
+          <h4>Binary &amp; Denary Conversion</h4>
+          <p>Unsigned binary integers, place values (128–1), binary ↔ denary conversion, binary addition, overflow.</p>
+          <span class="activity-tag cs">Trace binary addition</span>
+        </div>
+        <div class="topic-cell maths">
+          <div class="topic-cell-label">Maths</div>
+          <h4>Place Value &amp; Number Bases</h4>
+          <p>Powers of 10 place-value system; understanding that the same positional principle applies in base-2; index notation (2⁰, 2¹ … 2⁷).</p>
+          <span class="activity-tag maths">Compare base-10 vs base-2 columns</span>
+        </div>
+        <div class="topic-cell science">
+          <div class="topic-cell-label">Science</div>
+          <h4>Digital Signals (Physics)</h4>
+          <p>Why digital systems use binary (high/low voltage); signal vs noise advantage of digital over analogue transmission.</p>
+          <span class="activity-tag science">Oscilloscope voltage demo</span>
+        </div>
+        <div class="topic-cell business">
+          <div class="topic-cell-label">Business</div>
+          <h4>Data-Driven Decisions</h4>
+          <p>How businesses store and transmit data digitally; reliability of digital records vs paper-based systems.</p>
+          <span class="activity-tag business">Case study: stock systems</span>
+        </div>
+      </div>
+
+      <!-- Topic 1.2 -->
+      <div class="topic">
+        <div class="topic-cell cs">
+          <div class="topic-cell-label">Computer Science</div>
+          <h4>Hexadecimal</h4>
+          <p>Hex as shorthand for binary; conversion between hex, binary and denary; use in colour codes and MAC addresses.</p>
+          <span class="activity-tag cs">Colour picker hex challenge</span>
+        </div>
+        <div class="topic-cell maths">
+          <div class="topic-cell-label">Maths</div>
+          <h4>Working in Different Bases</h4>
+          <p>Extending place-value understanding to base-16; multiplying by powers of 16; mental arithmetic with larger bases.</p>
+          <span class="activity-tag maths">Base conversion worksheet</span>
+        </div>
+        <div class="topic-cell science">
+          <div class="topic-cell-label">Science</div>
+          <h4>Colour &amp; Light Spectrum</h4>
+          <p>How RGB hex values relate to the visible light spectrum; additive colour mixing in Physics optics unit.</p>
+          <span class="activity-tag science">RGB LED colour mixing</span>
+        </div>
+        <div class="topic-cell business">
+          <div class="topic-cell-label">Business</div>
+          <h4>Branding &amp; Digital Design</h4>
+          <p>Hex colour codes in brand guidelines; consistency of digital colour across marketing materials.</p>
+          <span class="activity-tag business">Brand colour palette task</span>
+        </div>
+      </div>
+
+      <!-- Topic 1.3 -->
+      <div class="topic">
+        <div class="topic-cell cs">
+          <div class="topic-cell-label">Computer Science</div>
+          <h4>Units of Data Storage</h4>
+          <p>Bits, nibbles, bytes, KB, MB, GB, TB; calculating file sizes for images and sound.</p>
+          <span class="activity-tag cs">File size calculator</span>
+        </div>
+        <div class="topic-cell maths">
+          <div class="topic-cell-label">Maths</div>
+          <h4>Standard Form &amp; Large Numbers</h4>
+          <p>Working with very large values (e.g. 1 TB = 10¹² bytes); converting between units using powers of 10 and 2.</p>
+          <span class="activity-tag maths">Unit conversion problems</span>
+        </div>
+        <div class="topic-cell science">
+          <div class="topic-cell-label">Science</div>
+          <h4>SI Prefixes</h4>
+          <p>Kilo, mega, giga prefixes in Science; comparing data units with physical measurement units (kg, MHz).</p>
+          <span class="activity-tag science">Prefix matching exercise</span>
+        </div>
+        <div class="topic-cell business">
+          <div class="topic-cell-label">Business</div>
+          <h4>Cloud Storage Costs</h4>
+          <p>Comparing cloud storage plans (cost per GB); business decisions around data storage and scalability.</p>
+          <span class="activity-tag business">Cloud provider comparison</span>
+        </div>
+      </div>
+
+      <!-- Topic 1.4 -->
+      <div class="topic">
+        <div class="topic-cell cs">
+          <div class="topic-cell-label">Computer Science</div>
+          <h4>Character Encoding (ASCII / Unicode)</h4>
+          <p>How characters map to binary values; ASCII table; why Unicode is needed for international character sets.</p>
+          <span class="activity-tag cs">Decode a secret message</span>
+        </div>
+        <div class="topic-cell maths">
+          <div class="topic-cell-label">Maths</div>
+          <h4>Sequences &amp; Mapping</h4>
+          <p>One-to-one mapping (function concept); character ↔ number as an example of a mathematical function.</p>
+          <span class="activity-tag maths">Function machines with ASCII</span>
+        </div>
+        <div class="topic-cell science">
+          <div class="topic-cell-label">Science</div>
+          <h4>—</h4>
+          <p>Limited direct link. Optional: encoding in DNA (base-4 system using A, T, C, G) as a biological parallel.</p>
+          <span class="activity-tag science">DNA as data storage</span>
+        </div>
+        <div class="topic-cell business">
+          <div class="topic-cell-label">Business</div>
+          <h4>Globalisation &amp; Localisation</h4>
+          <p>Why Unicode matters for international businesses; localising software and websites for global markets.</p>
+          <span class="activity-tag business">Website localisation case study</span>
+        </div>
+      </div>
+
+      <!-- Topic 1.5 -->
+      <div class="topic">
+        <div class="topic-cell cs">
+          <div class="topic-cell-label">Computer Science</div>
+          <h4>Images &amp; Sound Representation</h4>
+          <p>Pixels, resolution, colour depth, metadata; sampling rate and bit depth for sound; calculating file sizes.</p>
+          <span class="activity-tag cs">Pixel art → binary grid</span>
+        </div>
+        <div class="topic-cell maths">
+          <div class="topic-cell-label">Maths</div>
+          <h4>Area, Grids &amp; Proportionality</h4>
+          <p>Image dimensions as width × height; proportional reasoning when resizing; calculating area (pixels).</p>
+          <span class="activity-tag maths">Resolution ratio problems</span>
+        </div>
+        <div class="topic-cell science">
+          <div class="topic-cell-label">Science</div>
+          <h4>Waves — Sound &amp; Light</h4>
+          <p>Frequency, amplitude and wavelength in Physics waves unit; sampling as discrete approximation of continuous waves.</p>
+          <span class="activity-tag science">Sampling frequency demo</span>
+        </div>
+        <div class="topic-cell business">
+          <div class="topic-cell-label">Business</div>
+          <h4>Digital Media &amp; Marketing</h4>
+          <p>Image quality vs file size trade-offs in web design and advertising; compression for faster page loads.</p>
+          <span class="activity-tag business">Optimise an ad image task</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ===================== UNIT 2 ===================== -->
+  <div class="unit" id="unit2">
+    <div class="unit-header" onclick="toggleUnit('unit2')">
+      <span class="unit-number">UNIT 2</span>
+      <span class="unit-title">Computer Systems &amp; Architecture</span>
+      <span class="unit-spec">1CP2 Topics 1–2</span>
+      <span class="unit-toggle"><svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></span>
+    </div>
+    <div class="unit-body">
+
+      <div class="topic">
+        <div class="topic-cell cs">
+          <div class="topic-cell-label">Computer Science</div>
+          <h4>CPU Architecture (FDE Cycle)</h4>
+          <p>Von Neumann architecture; ALU, CU, registers, buses; fetch-decode-execute cycle; clock speed, cores, cache.</p>
+          <span class="activity-tag cs">FDE cycle trace activity</span>
+        </div>
+        <div class="topic-cell maths">
+          <div class="topic-cell-label">Maths</div>
+          <h4>Algorithms &amp; Sequences</h4>
+          <p>Sequential instruction processing as an ordered algorithm; clock speed measured in Hz (frequency).</p>
+          <span class="activity-tag maths">Frequency/period calculations</span>
+        </div>
+        <div class="topic-cell science">
+          <div class="topic-cell-label">Science</div>
+          <h4>Electricity &amp; Components</h4>
+          <p>Electrical circuits powering processors; voltage, current, resistance; energy consumption of computing hardware.</p>
+          <span class="activity-tag science">Circuit building with logic gates</span>
+        </div>
+        <div class="topic-cell business">
+          <div class="topic-cell-label">Business</div>
+          <h4>Technology &amp; Productivity</h4>
+          <p>How processor improvements drive business efficiency; Moore's Law and technology investment decisions.</p>
+          <span class="activity-tag business">Tech upgrade cost–benefit</span>
+        </div>
+      </div>
+
+      <div class="topic">
+        <div class="topic-cell cs">
+          <div class="topic-cell-label">Computer Science</div>
+          <h4>Boolean Logic</h4>
+          <p>AND, OR, NOT gates; truth tables; combining gates; simplifying Boolean expressions.</p>
+          <span class="activity-tag cs">Truth table challenge</span>
+        </div>
+        <div class="topic-cell maths">
+          <div class="topic-cell-label">Maths</div>
+          <h4>Logic &amp; Proof</h4>
+          <p>Logical connectives (and, or, not) in mathematical reasoning; Venn diagrams for set operations matching Boolean logic.</p>
+          <span class="activity-tag maths">Venn → truth table mapping</span>
+        </div>
+        <div class="topic-cell science">
+          <div class="topic-cell-label">Science</div>
+          <h4>Logic Gates (Electronics)</h4>
+          <p>Physical logic gates in circuits; combining gates to build half-adders; transistors as switches.</p>
+          <span class="activity-tag science">Build a half-adder circuit</span>
+        </div>
+        <div class="topic-cell business">
+          <div class="topic-cell-label">Business</div>
+          <h4>Decision-Making Models</h4>
+          <p>IF-THEN decision rules in business processes; decision trees mapping to AND/OR conditions.</p>
+          <span class="activity-tag business">Decision tree for product launch</span>
+        </div>
+      </div>
+
+      <div class="topic">
+        <div class="topic-cell cs">
+          <div class="topic-cell-label">Computer Science</div>
+          <h4>Memory &amp; Storage</h4>
+          <p>RAM vs ROM; volatile vs non-volatile; magnetic, optical, solid-state storage; virtual memory.</p>
+          <span class="activity-tag cs">Storage comparison table</span>
+        </div>
+        <div class="topic-cell maths">
+          <div class="topic-cell-label">Maths</div>
+          <h4>Capacity &amp; Comparison</h4>
+          <p>Comparing storage capacities using inequalities and ratio; cost-per-GB calculations.</p>
+          <span class="activity-tag maths">Best-buy storage problem</span>
+        </div>
+        <div class="topic-cell science">
+          <div class="topic-cell-label">Science</div>
+          <h4>Magnetism &amp; Materials</h4>
+          <p>Magnetic storage and ferromagnetic materials; optical storage and laser physics; semiconductor properties in SSDs.</p>
+          <span class="activity-tag science">Material properties investigation</span>
+        </div>
+        <div class="topic-cell business">
+          <div class="topic-cell-label">Business</div>
+          <h4>IT Procurement</h4>
+          <p>Choosing storage solutions for a business; balancing cost, speed, capacity and reliability in procurement.</p>
+          <span class="activity-tag business">Server vs cloud cost analysis</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ===================== UNIT 3 ===================== -->
+  <div class="unit" id="unit3">
+    <div class="unit-header" onclick="toggleUnit('unit3')">
+      <span class="unit-number">UNIT 3</span>
+      <span class="unit-title">Networks &amp; Security</span>
+      <span class="unit-spec">1CP2 Topic 3</span>
+      <span class="unit-toggle"><svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></span>
+    </div>
+    <div class="unit-body">
+
+      <div class="topic">
+        <div class="topic-cell cs">
+          <div class="topic-cell-label">Computer Science</div>
+          <h4>Network Topologies &amp; Protocols</h4>
+          <p>Star, mesh topologies; TCP/IP, HTTP, FTP; packet switching; IP/MAC addressing; DNS.</p>
+          <span class="activity-tag cs">Packet routing simulation</span>
+        </div>
+        <div class="topic-cell maths">
+          <div class="topic-cell-label">Maths</div>
+          <h4>Graph Theory (Extension)</h4>
+          <p>Networks as graphs with nodes and edges; shortest path problems; routing as an optimisation problem.</p>
+          <span class="activity-tag maths">Dijkstra's shortest path</span>
+        </div>
+        <div class="topic-cell science">
+          <div class="topic-cell-label">Science</div>
+          <h4>Electromagnetic Waves</h4>
+          <p>Wi-Fi and radio frequencies on the EM spectrum; fibre optics and total internal reflection.</p>
+          <span class="activity-tag science">EM spectrum poster activity</span>
+        </div>
+        <div class="topic-cell business">
+          <div class="topic-cell-label">Business</div>
+          <h4>E-Commerce &amp; Communication</h4>
+          <p>How networks enable online business; impact of internet on business models; cloud-based collaboration.</p>
+          <span class="activity-tag business">E-commerce business plan</span>
+        </div>
+      </div>
+
+      <div class="topic">
+        <div class="topic-cell cs">
+          <div class="topic-cell-label">Computer Science</div>
+          <h4>Cyber Security &amp; Threats</h4>
+          <p>Malware, phishing, SQL injection, brute force; firewalls, encryption, authentication, penetration testing.</p>
+          <span class="activity-tag cs">Spot the phishing email</span>
+        </div>
+        <div class="topic-cell maths">
+          <div class="topic-cell-label">Maths</div>
+          <h4>Probability &amp; Combinatorics</h4>
+          <p>Password strength as combinatorics (permutations); probability of brute-force success; expected number of attempts.</p>
+          <span class="activity-tag maths">Password crack-time calculator</span>
+        </div>
+        <div class="topic-cell science">
+          <div class="topic-cell-label">Science</div>
+          <h4>—</h4>
+          <p>Limited direct link. Optional: biometric authentication linking to Biology (fingerprints, iris patterns, DNA).</p>
+          <span class="activity-tag science">Biometrics discussion</span>
+        </div>
+        <div class="topic-cell business">
+          <div class="topic-cell-label">Business</div>
+          <h4>Data Protection &amp; GDPR</h4>
+          <p>Legal responsibilities for customer data; cost of data breaches; reputation and trust in business.</p>
+          <span class="activity-tag business">Data breach impact analysis</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ===================== UNIT 4 ===================== -->
+  <div class="unit" id="unit4">
+    <div class="unit-header" onclick="toggleUnit('unit4')">
+      <span class="unit-number">UNIT 4</span>
+      <span class="unit-title">Algorithms</span>
+      <span class="unit-spec">1CP2 Topic 5</span>
+      <span class="unit-toggle"><svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></span>
+    </div>
+    <div class="unit-body">
+
+      <div class="topic">
+        <div class="topic-cell cs">
+          <div class="topic-cell-label">Computer Science</div>
+          <h4>Searching Algorithms</h4>
+          <p>Linear search, binary search; comparing efficiency; when each is appropriate.</p>
+          <span class="activity-tag cs">Card-sort search races</span>
+        </div>
+        <div class="topic-cell maths">
+          <div class="topic-cell-label">Maths</div>
+          <h4>Inequalities &amp; Halving</h4>
+          <p>Binary search as repeated halving (link to bisection method); logarithmic vs linear growth; log₂(n) steps.</p>
+          <span class="activity-tag maths">Halving intervals on number line</span>
+        </div>
+        <div class="topic-cell science">
+          <div class="topic-cell-label">Science</div>
+          <h4>Scientific Method</h4>
+          <p>Systematic searching as controlled experimentation; eliminating variables; efficiency in experimental design.</p>
+          <span class="activity-tag science">Fair test planning parallel</span>
+        </div>
+        <div class="topic-cell business">
+          <div class="topic-cell-label">Business</div>
+          <h4>Market Research Methods</h4>
+          <p>Searching databases for market data; filtering and sorting customer records; efficiency in data retrieval.</p>
+          <span class="activity-tag business">Database search scenario</span>
+        </div>
+      </div>
+
+      <div class="topic">
+        <div class="topic-cell cs">
+          <div class="topic-cell-label">Computer Science</div>
+          <h4>Sorting Algorithms</h4>
+          <p>Bubble sort, merge sort, insertion sort; comparing time complexity; trace tables for sorting.</p>
+          <span class="activity-tag cs">Unplugged sorting with cards</span>
+        </div>
+        <div class="topic-cell maths">
+          <div class="topic-cell-label">Maths</div>
+          <h4>Ordering &amp; Comparing</h4>
+          <p>Ordering integers, decimals, fractions; comparison operators; understanding efficiency (n² vs n log n).</p>
+          <span class="activity-tag maths">Efficiency growth comparison graph</span>
+        </div>
+        <div class="topic-cell science">
+          <div class="topic-cell-label">Science</div>
+          <h4>Classification &amp; Taxonomy</h4>
+          <p>Sorting and classifying organisms in Biology; hierarchical classification as a sorting system.</p>
+          <span class="activity-tag science">Classify species using keys</span>
+        </div>
+        <div class="topic-cell business">
+          <div class="topic-cell-label">Business</div>
+          <h4>Operations &amp; Efficiency</h4>
+          <p>Sorting inventory, orders, priority; lean production and eliminating waste through efficient processes.</p>
+          <span class="activity-tag business">Warehouse sorting optimisation</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ===================== UNIT 5 ===================== -->
+  <div class="unit" id="unit5">
+    <div class="unit-header" onclick="toggleUnit('unit5')">
+      <span class="unit-number">UNIT 5</span>
+      <span class="unit-title">Programming Fundamentals</span>
+      <span class="unit-spec">1CP2 Topic 6</span>
+      <span class="unit-toggle"><svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></span>
+    </div>
+    <div class="unit-body">
+
+      <div class="topic">
+        <div class="topic-cell cs">
+          <div class="topic-cell-label">Computer Science</div>
+          <h4>Variables, Data Types &amp; Operations</h4>
+          <p>Integer, real, Boolean, string, character; assignment, arithmetic operators, string operations; casting.</p>
+          <span class="activity-tag cs">Type-casting challenge</span>
+        </div>
+        <div class="topic-cell maths">
+          <div class="topic-cell-label">Maths</div>
+          <h4>Algebra — Variables &amp; Expressions</h4>
+          <p>Variables as unknowns; substitution into expressions; integer vs decimal (real) number types; BIDMAS / operator precedence.</p>
+          <span class="activity-tag maths">Substitution into code expressions</span>
+        </div>
+        <div class="topic-cell science">
+          <div class="topic-cell-label">Science</div>
+          <h4>Formulas &amp; Calculations</h4>
+          <p>Using formulas (F = ma, V = IR); substituting values; rearranging equations — same skill as evaluating code expressions.</p>
+          <span class="activity-tag science">Formula → pseudocode translation</span>
+        </div>
+        <div class="topic-cell business">
+          <div class="topic-cell-label">Business</div>
+          <h4>Financial Calculations</h4>
+          <p>Revenue = price × quantity; profit margins; using variables in business formulas and spreadsheets.</p>
+          <span class="activity-tag business">Profit calculator program</span>
+        </div>
+      </div>
+
+      <div class="topic">
+        <div class="topic-cell cs">
+          <div class="topic-cell-label">Computer Science</div>
+          <h4>Selection &amp; Iteration</h4>
+          <p>IF/ELIF/ELSE; FOR loops, WHILE loops; nested structures; flowcharts; dry-running with trace tables.</p>
+          <span class="activity-tag cs">Trace table exercises</span>
+        </div>
+        <div class="topic-cell maths">
+          <div class="topic-cell-label">Maths</div>
+          <h4>Iteration &amp; Trial and Improvement</h4>
+          <p>Iterative methods for solving equations; trial and improvement as a loop; sequences generated by rules (like FOR loops).</p>
+          <span class="activity-tag maths">Iterative equation solver</span>
+        </div>
+        <div class="topic-cell science">
+          <div class="topic-cell-label">Science</div>
+          <h4>Experimental Repetition</h4>
+          <p>Repeating experiments (iteration); conditional outcomes based on results (selection); recording in tables (trace tables).</p>
+          <span class="activity-tag science">Results table → trace table</span>
+        </div>
+        <div class="topic-cell business">
+          <div class="topic-cell-label">Business</div>
+          <h4>Decision-Making &amp; Workflows</h4>
+          <p>Business flowcharts for processes; IF conditions in quality control; iterative product development cycles.</p>
+          <span class="activity-tag business">QC flowchart design</span>
+        </div>
+      </div>
+
+      <div class="topic">
+        <div class="topic-cell cs">
+          <div class="topic-cell-label">Computer Science</div>
+          <h4>Arrays / Lists &amp; Data Structures</h4>
+          <p>1D and 2D arrays; indexing; traversal; records; common operations (append, remove, length).</p>
+          <span class="activity-tag cs">Array manipulation tasks</span>
+        </div>
+        <div class="topic-cell maths">
+          <div class="topic-cell-label">Maths</div>
+          <h4>Matrices &amp; Coordinates</h4>
+          <p>2D arrays as matrices; row/column indexing; coordinate pairs for grid references — same mental model as 2D arrays.</p>
+          <span class="activity-tag maths">Grid reference challenges</span>
+        </div>
+        <div class="topic-cell science">
+          <div class="topic-cell-label">Science</div>
+          <h4>Data Tables &amp; Recording</h4>
+          <p>Recording experimental data in tables (rows = records, columns = fields); systematic data organisation.</p>
+          <span class="activity-tag science">Experiment → 2D array mapping</span>
+        </div>
+        <div class="topic-cell business">
+          <div class="topic-cell-label">Business</div>
+          <h4>Databases &amp; Spreadsheets</h4>
+          <p>Customer records as arrays of data; spreadsheet rows/columns; querying and filtering business data.</p>
+          <span class="activity-tag business">Spreadsheet data challenge</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ===================== UNIT 6 ===================== -->
+  <div class="unit" id="unit6">
+    <div class="unit-header" onclick="toggleUnit('unit6')">
+      <span class="unit-number">UNIT 6</span>
+      <span class="unit-title">Ethical, Legal, Cultural &amp; Environmental Issues</span>
+      <span class="unit-spec">1CP2 Topic 7</span>
+      <span class="unit-toggle"><svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></span>
+    </div>
+    <div class="unit-body">
+
+      <div class="topic">
+        <div class="topic-cell cs">
+          <div class="topic-cell-label">Computer Science</div>
+          <h4>Ethical &amp; Environmental Impact</h4>
+          <p>E-waste, energy consumption of data centres; digital divide; privacy and surveillance; AI ethics; open source vs proprietary.</p>
+          <span class="activity-tag cs">Ethical dilemma debate</span>
+        </div>
+        <div class="topic-cell maths">
+          <div class="topic-cell-label">Maths</div>
+          <h4>Statistics &amp; Data Handling</h4>
+          <p>Interpreting data on e-waste, energy use, internet access; mean, median, charts; misleading statistics.</p>
+          <span class="activity-tag maths">Analyse e-waste data set</span>
+        </div>
+        <div class="topic-cell science">
+          <div class="topic-cell-label">Science</div>
+          <h4>Energy &amp; Environment</h4>
+          <p>Energy consumption of technology; carbon footprint of servers; rare earth metals in electronics; recycling and sustainability.</p>
+          <span class="activity-tag science">Carbon footprint calculation</span>
+        </div>
+        <div class="topic-cell business">
+          <div class="topic-cell-label">Business</div>
+          <h4>Ethics, Legislation &amp; CSR</h4>
+          <p>Data Protection Act / GDPR; Computer Misuse Act; corporate social responsibility; stakeholder impact of technology decisions.</p>
+          <span class="activity-tag business">CSR report on a tech firm</span>
+        </div>
+      </div>
+
+      <div class="topic">
+        <div class="topic-cell cs">
+          <div class="topic-cell-label">Computer Science</div>
+          <h4>Legislation</h4>
+          <p>Data Protection Act 2018; Computer Misuse Act 1990; Copyright, Designs and Patents Act 1988; Freedom of Information Act.</p>
+          <span class="activity-tag cs">Match the law to the scenario</span>
+        </div>
+        <div class="topic-cell maths">
+          <div class="topic-cell-label">Maths</div>
+          <h4>—</h4>
+          <p>Limited direct link. Optional: analysing statistical data on cybercrime rates and trends over time.</p>
+          <span class="activity-tag maths">Cybercrime trend graphs</span>
+        </div>
+        <div class="topic-cell science">
+          <div class="topic-cell-label">Science</div>
+          <h4>Ethics in Science</h4>
+          <p>Parallels with ethics in scientific research (consent, data handling, animal testing); responsible innovation.</p>
+          <span class="activity-tag science">Ethics comparison discussion</span>
+        </div>
+        <div class="topic-cell business">
+          <div class="topic-cell-label">Business</div>
+          <h4>Legal Environment of Business</h4>
+          <p>How legislation affects business operations; compliance costs; consequences of data breaches for businesses.</p>
+          <span class="activity-tag business">Compliance audit simulation</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="footer">
+    Cross-Curricular SoW — Edexcel GCSE Computer Science (1CP2) · Designed for flexible use across Years 9–11 · Haute Vallée School
+  </div>
+
+</div>
+
+<script>
+function toggleUnit(id) {
+  const el = document.getElementById(id);
+  el.classList.toggle('open');
+}
+
+// Open first unit by default (already set via class), close others on load
+document.addEventListener('DOMContentLoaded', () => {
+  // All units except first start closed (no 'open' class in HTML except unit1)
+});
+</script>
+
+</body>
+</html>
